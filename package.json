@@ -1,0 +1,31 @@
+{
+  "name": "ls-chat",
+  "version": "1.0.0",
+  "description": "Live support chat",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/AhminaMar1/LS-Chat.git"
+  },
+  "keywords": [
+    "live",
+    "support",
+    "chat",
+    "nodeJS",
+    "MERN",
+    "stack",
+    "react",
+    "js",
+    "socket.io",
+    "redis"
+  ],
+  "author": "AHMINA Marouan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AhminaMar1/LS-Chat/issues"
+  },
+  "homepage": "https://github.com/AhminaMar1/LS-Chat#readme"
+}

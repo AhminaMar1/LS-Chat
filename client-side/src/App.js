@@ -13,7 +13,6 @@ function App() {
   return (
     <div className="App">
       <Router>
-      <div>
         <Switch>
           <Route path="/admin">
             <Admin/>
@@ -22,7 +21,6 @@ function App() {
             <Client />
           </Route>
         </Switch>
-      </div>
     </Router>
     </div>
   );

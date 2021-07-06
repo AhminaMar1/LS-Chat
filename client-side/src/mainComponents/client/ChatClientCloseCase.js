@@ -4,7 +4,7 @@ export default function ChatClientCloseCase({avatar, setToggleState}) {
 
     const elRefChatClient = useRef(null);
     const [useEffectDidMount, setUseEffectDidMount] = useState(false);
-    const [moseUp, setMouseUp] = useState(false);
+    const [mouseUp, setMouseUp] = useState(false);
     const [elPositin, setElPosition] = useState({
         x: 10,
         y: 10
@@ -23,7 +23,7 @@ export default function ChatClientCloseCase({avatar, setToggleState}) {
 
         }, [diffMouse, moving])
 
-    const mouseUp = (e) => {
+    const handleMouseUp = (e) => {
         e = e || window.event;
         let diffX = e.clientX - elPositin.x;
         let diffY = e.clientY - elPositin.y;
@@ -41,7 +41,7 @@ export default function ChatClientCloseCase({avatar, setToggleState}) {
     }, [elPositin])
 
     const handleOpenClick = () =>{
-        if (moseUp && moving) {
+        if (mouseUp && moving) {
             setMouseUp(false);
             setMoving(false);
         } else {
@@ -90,15 +90,15 @@ export default function ChatClientCloseCase({avatar, setToggleState}) {
 
     useEffect(() => {
         
-        if(moseUp) window.addEventListener('mousemove', moveHandle);
+        if(mouseUp) window.addEventListener('mousemove', moveHandle);
 
         return () => window.removeEventListener('mousemove', moveHandle);
 
-    }, [moveHandle ,moseUp]);
+    }, [moveHandle ,mouseUp]);
 
 
     return (
-        <div ref={elRefChatClient} onMouseDown={(e)=>mouseUp(e)} onClick={()=>handleOpenClick()} className="chat-client-close-case noselect" style={(useEffectDidMount)?{top: elPositin.y, left: elPositin.x}:{opacity: 0}}>
+        <div ref={elRefChatClient} onMouseDown={(e)=>handleMouseUp(e)} onClick={()=>handleOpenClick()} className="chat-client-close-case noselect" style={(useEffectDidMount)?{top: elPositin.y, left: elPositin.x}:{opacity: 0}}>
             <div className="notification"><div><span>0</span></div></div>
             <img src={avatar} alt="admin pic" draggable="false" />
         </div>

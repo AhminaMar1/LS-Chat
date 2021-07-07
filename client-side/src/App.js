@@ -5,8 +5,8 @@ import {
   Route
 } from "react-router-dom";
 import Admin from './mainComponents/admin/Admin';
+import Login from './mainComponents/admin/Login';
 import Client from './mainComponents/client/Client';
-import './styles/App.css';
 
 function App() {
 
@@ -16,6 +16,9 @@ function App() {
         <Switch>
           <Route path="/admin">
             <Admin/>
+          </Route>
+          <Route path="/login">
+            <Login/>
           </Route>
           <Route path="/">
             <Client />

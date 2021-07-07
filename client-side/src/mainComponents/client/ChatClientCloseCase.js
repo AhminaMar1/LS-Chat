@@ -98,9 +98,13 @@ export default function ChatClientCloseCase({avatar, setToggleState}) {
 
 
     return (
-        <div ref={elRefChatClient} onMouseDown={(e)=>handleMouseUp(e)} onClick={()=>handleOpenClick()} className="chat-client-close-case noselect" style={(useEffectDidMount)?{top: elPositin.y, left: elPositin.x}:{opacity: 0}}>
-            <div className="notification"><div><span>0</span></div></div>
-            <img src={avatar} alt="admin pic" draggable="false" />
+        <div className="chat-client-close-case-container" style={(useEffectDidMount)?{top: elPositin.y, left: elPositin.x}:{opacity: 0}}>
+            <div className="zoom-animate">
+                <div ref={elRefChatClient} onMouseDown={(e)=>handleMouseUp(e)} onClick={()=>handleOpenClick()} className="chat-client-close-case noselect">
+                    <div className="notification"><div><span>0</span></div></div>
+                    <img src={avatar} alt="admin pic" draggable="false" />
+                </div>
+            </div>
         </div>
     )
 }

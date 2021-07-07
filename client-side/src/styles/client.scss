@@ -185,13 +185,9 @@ body{
 
 //Close case
 .chat-client-close-case{
-    position: fixed;
     width: 70px;
     height: 70px;
     background-color: $primary-color;
-    bottom: 15px;
-    right: 0;
-    margin-right: 25%;
     border-radius: 50%;
     border: 1px solid #fff;
     cursor: pointer;
@@ -231,7 +227,7 @@ body{
     .chat-client{
         margin-left: 30%;
     }
-    .chat-client-close-case{
+    .chat-client-close-case-container{
         margin-right: 30%;
     }
 }
@@ -241,4 +237,29 @@ body{
         margin-left: 50%;
         transform: translateX(-50%);
     }
+}
+
+.chat-client-close-case-container{
+    position: fixed;
+    width: 70px;
+    height: 70px;
+    bottom: 15px;
+    right: 0;
+    margin-right: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .zoom-animate{
+        animation: zoomAnimate 50ms;
+    }
+
+}
+
+@keyframes zoomAnimate {
+    0% { zoom: 0.5; }
+    20% { zoom: 0.6; }
+    40% { zoom: 0.7; }
+    60% { zoom: 0.8; }
+    80% { zoom: 0.9; }
+    100% { zoom: 1; }
 }

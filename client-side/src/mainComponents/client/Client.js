@@ -22,7 +22,7 @@ export default function Client() {
     }, []);
 
     return (
-        <>
+        <div className="chat-client-main-container">
             {(togleState)?
 
             <ChatClient avatar={avatar} setToggleState={setToggleState}/>
@@ -31,6 +31,6 @@ export default function Client() {
             }
 
 
-        </>
+        </div>
     )
 }

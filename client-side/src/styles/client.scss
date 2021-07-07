@@ -3,9 +3,7 @@ $primary-color: #378fb4;
 
 body{
     margin: 0;
-    padding: 0;
-    background-color: #777;
-    font-family: 'Baloo Tammudu 2', cursive;
+    padding: 0;    
 }
 
 
@@ -18,6 +16,14 @@ body{
               user-select: none; /* Non-prefixed version, currently
                                     supported by Chrome, Edge, Opera and Firefox */
 }
+
+.chat-client-main-container{
+    width: 100%;
+    height: 100vh;
+    background-color: #777;
+    font-family: 'Baloo Tammudu 2', cursive;
+}
+
 
 /* chat-client == cc */
 .chat-client{
@@ -130,54 +136,52 @@ body{
     }
     
     
+    //input-group
     
-}
-
-
-//input-group
-
-.input-group{
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 45px;
-    display: flex;
-    textarea{
-        box-sizing: border-box;
+    .input-group{
+        position: absolute;
+        bottom: 0;
         width: 100%;
         height: 45px;
-        padding: 10px;
-        padding-right: 35px;
-        resize: none;
-        border: 0;
-        border-top: 1px solid #ccc;
-        font-size: 15px;
-        background-color: #fcfcfc;
-        order: 1;
-        &:focus{
-            outline: 0;
-        }   
-    }
-    .button-flex{
-        position: absolute;
-        right: 0;
-        height: 45px;
         display: flex;
-        align-items: center;
-        padding-right: 12px;
-        button{
+        textarea{
+            box-sizing: border-box;
+            width: 100%;
+            height: 45px;
+            padding: 10px;
+            padding-right: 35px;
+            resize: none;
             border: 0;
-            background-color: transparent;
-            color: $primary-color;
-            cursor: pointer;
-            i{
-                transform: rotate(15deg);
-                font-size: 17px;
+            border-top: 1px solid #ccc;
+            font-size: 15px;
+            background-color: #fcfcfc;
+            order: 1;
+            &:focus{
+                outline: 0;
+            }   
+        }
+        .button-flex{
+            position: absolute;
+            right: 0;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            padding-right: 12px;
+            button{
+                border: 0;
+                background-color: transparent;
+                color: $primary-color;
+                cursor: pointer;
+                i{
+                    transform: rotate(15deg);
+                    font-size: 17px;
+                }
+    
             }
-
         }
     }
 }
+
 
 //Close case
 .chat-client-close-case{

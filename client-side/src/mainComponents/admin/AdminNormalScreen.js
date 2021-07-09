@@ -5,6 +5,11 @@ import NavbarNS from './components/NavbarNS';
 import OnlineUsers from './components/OnlineUsers';
 
 export default function NormalScreen(){
+
+    const setChatBoxActive = () => {
+        //Currently it is null
+    }
+    
     return(
         <div className="main-container-admin">
             <header>
@@ -12,9 +17,9 @@ export default function NormalScreen(){
             </header>
             <main>
                 <div className="flex">
-                    <ConversationBoxes />
+                    <ConversationBoxes setChatBoxActive={setChatBoxActive}/>
                     <ChatBox />
-                    <OnlineUsers />
+                    <OnlineUsers setChatBoxActive={setChatBoxActive}/>
                 </div>
             </main>
         </div>

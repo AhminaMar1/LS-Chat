@@ -25,8 +25,8 @@ app.get('/' , (req , res)=>{
 
 });
 
-const admin = require ('./routers/admin');
-const client = require ('./routers/client');
+const admin = require ('./src/routers/admin');
+const client = require ('./src/routers/client');
 
 app.use('/api/admin', admin);
 app.use('/api/client', client);

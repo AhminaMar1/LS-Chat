@@ -25,6 +25,13 @@ app.get('/' , (req , res)=>{
 
 });
 
+const admin = require ('./routers/admin');
+const client = require ('./routers/client');
+
+app.use('/api/admin', admin);
+app.use('/api/client', client);
+
+
 //Init socket.io
 const io = socketIo(server, {
    cors: {
@@ -35,7 +42,7 @@ const io = socketIo(server, {
 io.on("connection", (socket) => {
    console.log("New client connected");
 
-   socket.emit('FromAPI', {socket: true})
+   socket.emit('FromAPI', {date: new Date()})
 
    socket.on("disconnect", () => {
       console.log("Client disconnected");
@@ -43,5 +50,5 @@ io.on("connection", (socket) => {
 });
 
 
-//Listen
+//Lesten
 server.listen(port, ()=>{console.log(`The serve runing in PORT ${port}`)})

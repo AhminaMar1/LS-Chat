@@ -11,7 +11,7 @@ GET http://localhost:5000/api/admin/firstget
 
 
 ###Git more latest 10 conversations
-GET http://localhost:5000/api/admin/moreconversation
+GET http://localhost:5000/api/admin/moreconversations
 
 ###Login - If the user doesn't have the token -- or his token is wrong
 POST http://localhost:5000/api/admin/login
@@ -20,11 +20,11 @@ POST http://localhost:5000/api/admin/login
 ###clinet's api -- (One user and all admins can get this by special-tonken)
 ###
 
-###When the first get - get the last messages if the user has already the token id in his storage
-GET http://localhost:5000/api/client/lastmsgs
+###When the first get - get the last messages (document of last chat) if the user has already the token id in his storage
+GET http://localhost:5000/api/client/lastchatdoc
 
 ### We need to send the current id of chat-document to get the prev chat-document
-GET http://localhost:5000/api/client/prevmsgs
+GET http://localhost:5000/api/client/prevchatdoc
 
 
 ###To create a session - create and return the token. If the user doesn't has the token in his storage

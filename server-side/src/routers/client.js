@@ -1,5 +1,7 @@
 const router = require('express').Router()
 
+const clientController = require('../controllers/client');
+
 //gets from mongoDB
 
 //Get my lastest doc-mssg
@@ -13,7 +15,6 @@ router.get('/prevchatdoc' , (req , res)=>{
 
 
 // start session. Create and retuen the token
-router.get('/startsession' , (req , res)=>{
-})
+router.get('/startsession' , clientController.startSession)
 
 module.exports  = router;

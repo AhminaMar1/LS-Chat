@@ -28,4 +28,9 @@ GET http://localhost:5000/api/client/prevchatdoc
 
 
 ###To create a session - create and return the token. If the user doesn't has the token in his storage
-GET http://localhost:5000/api/client/startsession
+POST http://localhost:5000/api/client/startsession HTTP/1.1
+content-type: application/json
+{
+    "id" : "60ea0ac277033e44a47fd5e8",
+    "token" : "5e6l6o7qbflrylc0v055tq"
+}

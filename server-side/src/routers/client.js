@@ -15,6 +15,6 @@ router.get('/prevchatdoc' , (req , res)=>{
 
 
 // start session. Create and retuen the token
-router.get('/startsession' , clientController.startSession)
+router.post('/startsession' , clientController.startSession)
 
 module.exports  = router;

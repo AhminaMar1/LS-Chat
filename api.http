@@ -27,7 +27,7 @@ GET http://localhost:5000/api/client/lastchatdoc
 GET http://localhost:5000/api/client/prevchatdoc
 
 
-###To create a session - create and return the token. If the user doesn't has the token in his storage
+###To create a session - create and return the token. If the user doesn't has the token in his storage / POST
 POST http://localhost:5000/api/client/startsession HTTP/1.1
 content-type: application/json
 {

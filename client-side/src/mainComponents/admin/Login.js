@@ -1,8 +1,14 @@
 import React, {useState} from 'react';
 import '../../styles/login.scss';
+import axios from 'axios';
+import env from "react-dotenv";
+
+
+const API_URL = env.API_URL;
 
 export default function Login(){
-    
+    //apiURL
+
     //DemoAccount to test the app
     const usernameDemo = 'demoaccount';
     const passwordDemo = 'demoaccount';
@@ -56,6 +62,23 @@ export default function Login(){
         setPasswordInput(value);
     }
 
+    //Login test
+
+    const sendToLogin = () => {
+        const data = {
+            username: usernameInput,
+            password: passwordInput
+        }
+
+        axios.post(`${API_URL}/admin/login`, data)
+        .then(res => {
+            let status = res.status;
+            if (status === 400){
+            }
+            console.log(res)
+        });
+    }
+
 
     return(
         <div className="login-main-container">
@@ -73,7 +96,7 @@ export default function Login(){
                         <div className="check"><i className="fas fa-check-circle" /></div>
 
                     </div>
-                    <button>login</button>
+                    <button onClick={sendToLogin}>login</button>
                 </div>
             </section>
 

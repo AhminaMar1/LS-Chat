@@ -6,24 +6,20 @@ const mongoose = require('mongoose')
 
 //The env
 require('dotenv').config()
-
-
-const app = express()
-const server = http.createServer(app)
-
-const port = process.env.PORT || 5000;
+const port = process.env.SOCKET_PORT || 6000;
 const clientURL = process.env.CLIENT_SIDE;
 const dbURL = process.env.DB_URL;
 
-//
+
+//Connect with the mongo DB
 mongoose.connect(dbURL, {useNewUrlParser: true, useUnifiedTopology: true});
-//mongoose.connect('mongodb://test:test123@localhost:27017/tschat', {useNewUrlParser: true, useUnifiedTopology: true});
 
 const db = mongoose.connection
 db.on('error', (error) => console.error(error))
 db.once('open', () => console.log('Connected to Database'))
 
-
+//express
+const app = express()
 
 //Cors middleware 
 app.use(cors())
@@ -31,19 +27,9 @@ app.use(cors())
 // use json
 app.use(express.json())
 
+// Http server for the socket
+const server = http.createServer(app)
 
-//Express routers - APIs
-app.get('/' , (req , res)=>{
-
-   res.status(200).send('The index http runing');
-
-});
-
-const admin = require ('./src/routers/admin');
-const client = require ('./src/routers/client');
-
-app.use('/api/admin', admin);
-app.use('/api/client', client);
 
 
 //Init socket.io
@@ -65,4 +51,4 @@ io.on("connection", (socket) => {
 
 
 //Lesten
-server.listen(port, ()=>{console.log(`The serve runing in PORT ${port}`)})
+server.listen(port, ()=>{console.log(`The SOCKET serve runing in PORT ${port}`)})

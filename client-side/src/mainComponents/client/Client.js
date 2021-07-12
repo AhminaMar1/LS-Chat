@@ -14,9 +14,16 @@ const API_URL = env.API_URL;
 
 export default function Client() {
 
+    //States
     const [togleState, setToggleState] = useState(true);
     const [myData, setMyData] = useState({});
 
+    //const [messages, setMessages] = useState({});
+    const [newMessage, setNewMessage] = useState('');
+
+    const [socket, setSocket] = useState();
+
+    //Effects
     useEffect(() => {
         const data = {
             id: localStorage.getItem('lsc_id'),
@@ -38,22 +45,36 @@ export default function Client() {
             }
         });
 
+
+    }, []);
+
+    
+    useEffect(() => {
         const socket = socketIOClient(ENDPOINT);
+        
         socket.on("FromAPI", data => {
             console.log(data);
         });
 
-    }, []);
+        setSocket(socket);
+    }, [])
 
     useEffect(() => {
         console.log(myData)
     }, [myData])
+    //Functions
+
+    const sendMessage = () => {
+        socket.emit('sendMessage', {message: newMessage});
+        setNewMessage('');
+    }
+
 
     return (
         <div className="chat-client-main-container">
             {(togleState)?
 
-            <ChatClient avatar={avatar} setToggleState={setToggleState}/>
+            <ChatClient sendMessage={sendMessage} newMessage={newMessage} setNewMessage={setNewMessage} avatar={avatar} setToggleState={setToggleState}/>
             :
             <ChatClientCloseCase avatar={avatar} setToggleState={setToggleState}/>
             }

@@ -1,6 +1,31 @@
-import React from 'react'
+import React, {useState} from 'react'
 
-export default function ChatClient({avatar, setToggleState}) {
+export default function ChatClient({sendMessage, newMessage, setNewMessage, avatar, setToggleState}) {
+
+    const [clickShift, setClickShift] = useState(false);
+    const [allowChange, setAllowChange] = useState(true)
+    const handleChange = (e) => {
+        if(allowChange){
+            setNewMessage(e.target.value);
+        }else{
+            setAllowChange(true);
+        }
+    }
+
+    const handleKeyDown = (e) => {
+        if (!clickShift && e.keyCode === 16) { //shift
+            setClickShift(true);
+        } else if (!clickShift && e.keyCode === 13) {
+            if(newMessage!==''){
+                sendMessage();
+            }
+            setAllowChange(false);
+        } else if (clickShift) {
+            setClickShift(false);
+        }
+    
+    }
+
     return (
         <div className="chat-client">
             <div className="header">
@@ -23,7 +48,7 @@ export default function ChatClient({avatar, setToggleState}) {
                 <div className="button-flex">
                     <button><i className="far fa-paper-plane" /></button>
                 </div>
-                <textarea name="message"></textarea>
+                <textarea name="message" value={newMessage} onKeyDown={handleKeyDown} onChange={(e) => handleChange(e)}></textarea>
             </div>
         </div>
     )

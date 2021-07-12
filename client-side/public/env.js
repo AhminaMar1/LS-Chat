@@ -81,6 +81,6 @@ window.env = {
   "VTE_VERSION": "6003",
   "INIT_CWD": "/home/marouan/Desktop/LS-Chat/client-side",
   "EDITOR": "vi",
-  "END_POINT": "http://localhost:5000",
+  "END_POINT": "http://localhost:5050",
   "API_URL": "http://localhost:5000/api"
 };

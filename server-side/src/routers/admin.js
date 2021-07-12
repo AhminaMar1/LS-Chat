@@ -12,8 +12,6 @@ router.get('/moreconversations' , (req , res)=>{
 
 });
 
-router.post('/login' , (req , res)=>{
-    // router code here
-});
+router.post('/login' , adminController.login);
 
 module.exports  = router;

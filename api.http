@@ -14,7 +14,12 @@ GET http://localhost:5000/api/admin/firstget
 GET http://localhost:5000/api/admin/moreconversations
 
 ###Login - If the user doesn't have the token -- or his token is wrong
-POST http://localhost:5000/api/admin/login
+POST http://localhost:5000/api/admin/login HTTP/1.1
+content-type: application/json
+{
+    "username" : "test",
+    "password" : "tt"
+}
 
 ###
 ###clinet's api -- (One user and all admins can get this by special-tonken)
@@ -32,5 +37,5 @@ POST http://localhost:5000/api/client/startsession HTTP/1.1
 content-type: application/json
 {
     "id" : "60ea0ac277033e44a47fd5e8",
-    "token" : "5e6l6o7qbflrylc0v055tq"
+    "token" : "5e6l6o7qbflrylc0v055t"
 }

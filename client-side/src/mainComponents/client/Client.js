@@ -18,7 +18,7 @@ export default function Client() {
     const [togleState, setToggleState] = useState(true);
     const [myData, setMyData] = useState({id: false});
 
-    //const [messages, setMessages] = useState({});
+    const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
 
     const [socket, setSocket] = useState();
@@ -66,13 +66,18 @@ export default function Client() {
                 user_id: myData.id,
                 token: myData.token
             });
+
+            socket.on('newMessage', (data) => {
+                setMessages(ms => [...ms, data])
+            })
+
         }
-        console.log(myData)
+
     }, [myData, socket])
     //Functions
 
     const sendMessage = () => {
-        socket.emit('sendMessage', {message: newMessage});
+        socket.emit('sendMessage', {checkData: myData, message: newMessage});
         setNewMessage('');
     }
 
@@ -81,7 +86,7 @@ export default function Client() {
         <div className="chat-client-main-container">
             {(togleState)?
 
-            <ChatClient sendMessage={sendMessage} newMessage={newMessage} setNewMessage={setNewMessage} avatar={avatar} setToggleState={setToggleState}/>
+            <ChatClient messages={messages} sendMessage={sendMessage} newMessage={newMessage} setNewMessage={setNewMessage} avatar={avatar} setToggleState={setToggleState}/>
             :
             <ChatClientCloseCase avatar={avatar} setToggleState={setToggleState}/>
             }

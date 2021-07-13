@@ -62,7 +62,22 @@ io.on("connection", (socket) => {
    })
    
    socket.on("sendMessage", (data) => {
-      console.log(data);
+
+      let checkData = data.checkData;
+
+      redisClient.hgetall(socket.id, (err, redisBackData) => {
+         if (err){
+            console.err(err)
+         } else {
+            //Checking token
+            if(redisBackData.userId == checkData.userId && redisBackData.token == checkData.token) {
+               //send to admins
+
+               socket.emit("newMessage", {new: data.message});
+
+            }
+         }
+      })
    });
 
    

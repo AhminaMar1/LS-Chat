@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 
-export default function ChatClient({sendMessage, newMessage, setNewMessage, avatar, setToggleState}) {
+export default function ChatClient({messages, sendMessage, newMessage, setNewMessage, avatar, setToggleState}) {
 
     const [clickShift, setClickShift] = useState(false);
     const [allowChange, setAllowChange] = useState(true)
@@ -49,6 +49,11 @@ export default function ChatClient({sendMessage, newMessage, setNewMessage, avat
                     <button><i className="far fa-paper-plane" /></button>
                 </div>
                 <textarea name="message" value={newMessage} onKeyDown={handleKeyDown} onChange={(e) => handleChange(e)}></textarea>
+            </div>
+            <div>
+                { (messages.length >= 1) ? messages.map( (mssg, key) => {
+                    return <p key={key}>{mssg.new}</p>
+                }) : ''}
             </div>
         </div>
     )

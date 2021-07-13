@@ -16,7 +16,7 @@ export default function Client() {
 
     //States
     const [togleState, setToggleState] = useState(true);
-    const [myData, setMyData] = useState({});
+    const [myData, setMyData] = useState({id: false});
 
     //const [messages, setMessages] = useState({});
     const [newMessage, setNewMessage] = useState('');
@@ -61,8 +61,14 @@ export default function Client() {
     }, [])
 
     useEffect(() => {
+        if(myData.id){
+            socket.emit('newRedisSession', {
+                user_id: myData.id,
+                token: myData.token
+            });
+        }
         console.log(myData)
-    }, [myData])
+    }, [myData, socket])
     //Functions
 
     const sendMessage = () => {

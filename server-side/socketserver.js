@@ -4,7 +4,7 @@ const socketIo = require('socket.io')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const redis = require('redis');
-const client = redis.createClient();
+const redisClient = redis.createClient();
 
 //The env
 require('dotenv').config()
@@ -13,10 +13,10 @@ const clientURL = process.env.CLIENT_SIDE;
 const dbURL = process.env.DB_URL;
 
 //connet with redis
-client.on('connect', function() {
+redisClient.on('connect', function() {
    console.log('Redis is connected!');
  });
- 
+
 
 //Connect with the mongo DB
 mongoose.connect(dbURL, {useNewUrlParser: true, useUnifiedTopology: true});
@@ -46,10 +46,20 @@ const io = socketIo(server, {
    }
 });
 
+//Functons
+const checkUser = require('./src/functions/checkUser')
+
+
 io.on("connection", (socket) => {
    console.log("New client connected");
 
    socket.emit('FromAPI', {date: new Date()})
+
+   //Save a new session in redis when the user is connet
+
+   socket.on('newRedisSession', (data) => {
+      checkUser.storageForCheking(data, redisClient, socket.id);
+   })
    
    socket.on("sendMessage", (data) => {
       console.log(data);
@@ -57,7 +67,10 @@ io.on("connection", (socket) => {
 
    
    socket.on("disconnect", () => {
+
+      redisClient.del(socket.id);
       console.log("Client disconnected");
+      
    });
 });
 

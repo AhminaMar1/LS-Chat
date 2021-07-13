@@ -40,7 +40,8 @@ export default function Client() {
             }else {
                 setMyData({
                     id: myData._id,
-                    token: myData.token
+                    token: myData.token,
+                    curr_chat_doc_id: myData.curr_chat_doc_id
                 })                
             }
         });

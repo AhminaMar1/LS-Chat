@@ -1,4 +1,5 @@
 const User = require('../models/user')
+const Chat = require('../models/chat')
 
 exports.lastChatDoc = (req, res) => {
     
@@ -17,13 +18,13 @@ exports.startSession = async (req, res) => {
 
     if (id === null || token === null){
         //Create new session
-        clientFunctions.saveNewSession(User, res)
+        clientFunctions.saveNewSession(User, Chat, res)
     } else {
         User.findById(id, function (err, user) {
             if (err || !user) {
 
                 //Create new session
-                clientFunctions.saveNewSession(User, res)
+                clientFunctions.saveNewSession(User, Chat, res)
     
             } else {
                 
@@ -32,6 +33,7 @@ exports.startSession = async (req, res) => {
                     const resultat = {
                         _id: user._id,
                         random_name: user.random_name,
+                        curr_chat_doc_id : user.current_chat_document_id,
                         token: user.token,
                         already: true
                     }
@@ -39,7 +41,7 @@ exports.startSession = async (req, res) => {
                     res.status(200).json(resultat)
                 } else {
                     //Create new session
-                    clientFunctions.saveNewSession(User, res)
+                    clientFunctions.saveNewSession(User, Chat, res)
                 }
             }
         });

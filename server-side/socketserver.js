@@ -3,6 +3,8 @@ const http = require('http')
 const socketIo = require('socket.io')
 const cors = require('cors')
 const mongoose = require('mongoose')
+const redis = require('redis');
+const client = redis.createClient();
 
 //The env
 require('dotenv').config()
@@ -10,6 +12,11 @@ const port = process.env.SOCKET_PORT || 6000;
 const clientURL = process.env.CLIENT_SIDE;
 const dbURL = process.env.DB_URL;
 
+//connet with redis
+client.on('connect', function() {
+   console.log('Redis is connected!');
+ });
+ 
 
 //Connect with the mongo DB
 mongoose.connect(dbURL, {useNewUrlParser: true, useUnifiedTopology: true});

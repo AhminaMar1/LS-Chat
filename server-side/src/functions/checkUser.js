@@ -5,8 +5,13 @@ exports.storageForCheking = async (data, redisClient, socketId) => {
         if (err || !user || !data.token || data.token !== user.token) {
             console.log('err chek user token');
         }else {
-            console.log(socketId);
             redisClient.hmset(socketId, data);
+            let keyOfList = "sl_"+data.user_id; // sl = sockets list
+            redisClient.rpush(keyOfList, socketId, (err) => {
+                if(err){
+                    console.log(err);
+                }
+            });
         }
     });
 }

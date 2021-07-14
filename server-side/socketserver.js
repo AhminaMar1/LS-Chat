@@ -83,12 +83,35 @@ io.on("connection", (socket) => {
    
    socket.on("disconnect", () => {
 
-      redisClient.del(socket.id);
-      console.log("Client disconnected");
-      
+      //If the user is not an admin
+      redisClient.hgetall(socket.id, (err, retData) => {
+         
+         
+         if (err){
+            console.err(err)
+         } else if (retData !== null) {
+               redisClient.del(socket.id);
+               let keyOfList = "sl_"+retData.user_id; // sl = sockets list
+               redisClient.LREM(keyOfList, 1, socket.id, (err) => {
+                  if(err){
+                     console.log(err);
+                  }
+               });  
+
+         }
+         //console log
+         console.log("Client disconnected");
+      });
+
+      //The the user is an admin
+
+
+
+
    });
+
 });
 
 
-//Lesten
+//Listen
 server.listen(port, ()=>{console.log(`The SOCKET serve runing in PORT ${port}`)})

@@ -25,11 +25,6 @@ app.use(cors())
 app.use(express.json())
 
 
-
-
-
-
-
 //Express routers - APIs
 app.get('/' , (req , res)=>{
 
@@ -37,11 +32,12 @@ app.get('/' , (req , res)=>{
 
 });
 
+//Routers
 const admin = require ('./src/routers/admin');
 const client = require ('./src/routers/client');
 
 app.use('/api/admin', admin);
 app.use('/api/client', client);
 
-//Lesten
+//Listen
 app.listen(port, ()=>{console.log(`The API serve runing in PORT ${port}`)})

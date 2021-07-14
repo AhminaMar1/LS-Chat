@@ -98,12 +98,21 @@ io.on("connection", (socket) => {
             console.err(err)
          } else if (retData !== null) {
                redisClient.del(socket.id);
-               let keyOfList = "sl_"+retData.user_id; // sl = sockets list
+               let id = retData.user_id;
+               let keyOfList = "sl_"+id; // sl = sockets list
                redisClient.LREM(keyOfList, 1, socket.id, (err) => {
                   if(err){
                      console.log(err);
+                  }else{
+                     redisClient.llen(keyOfList, (err, num) => {
+                        if(err){
+                           console.log(err);
+                        }else if(num < 1){
+                           redisClient.hdel('onlines', id);
+                        }
+                     });
                   }
-               });  
+               });
 
          }
          //console log

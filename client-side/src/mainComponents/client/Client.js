@@ -37,7 +37,8 @@ export default function Client() {
             if (status === 201){
                 localStorage.setItem('lsc_id', myData._id);
                 localStorage.setItem('lsc_token', myData.token);
-            }else {
+            }
+            if (status === 201 || status === 200) {
                 setMyData({
                     id: myData._id,
                     token: myData.token,

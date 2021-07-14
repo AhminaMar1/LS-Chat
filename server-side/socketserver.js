@@ -66,14 +66,21 @@ io.on("connection", (socket) => {
       let checkData = data.checkData;
 
       redisClient.hgetall(socket.id, (err, redisBackData) => {
+         
          if (err){
             console.err(err)
          } else {
             //Checking token
-            if(redisBackData.userId == checkData.userId && redisBackData.token == checkData.token) {
+            if(redisBackData && redisBackData.user_id == checkData.id && redisBackData.token == checkData.token) {
                //send to admins
 
                socket.emit("newMessage", {new: data.message});
+
+               redisClient.rpush(checkData.id, data.message, (err) => {
+                  if (err) {
+                     console.log(err);
+                  }
+               })
 
             }
          }

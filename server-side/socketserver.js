@@ -109,6 +109,7 @@ io.on("connection", (socket) => {
                            console.log(err);
                         }else if(num < 1){
                            redisClient.hdel('onlines', id);
+                          //Send the updating of the list of onlines to the Admins
                         }
                      });
                   }

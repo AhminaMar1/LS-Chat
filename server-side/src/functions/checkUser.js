@@ -27,8 +27,10 @@ exports.storageForCheking = async (data, redisClient, socketId) => {
             redisClient.hmset("onlines", id, name, (err) => {
                 if(err){
                     console.log(err);
-                    //Send list of onlines
+                } else {
+                    //Send the updating of the list of onlines to the Admins
                 }
+
             });
 
         }

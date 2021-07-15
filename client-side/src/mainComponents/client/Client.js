@@ -73,7 +73,7 @@ export default function Client() {
                 let id = data.id;
                 setMessages(ms => ms.map((el) => {
                     if (id === el.id){
-                        el.sended = true;
+                        el.sent = true;
                     }
                     return el;
                 }))
@@ -95,8 +95,8 @@ export default function Client() {
         let dataStore = {
             id: newUuid,
             mssg: newMessage,
-            sended: false,
-            readed: false
+            sent: false,
+            read: false
         }
         setMessages(ms => [...ms, dataStore])
         

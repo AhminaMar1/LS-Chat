@@ -54,9 +54,9 @@ export default function ChatClient({messages, sendMessage, newMessage, setNewMes
                 { (messages.length >= 1) ? messages.map( (data) => {
                     return <div className="me" key={data.id}>
                         <div>
-                            {(data.sended === false) ? 
+                            {(data.sent === false) ? 
                             ''
-                            : (data.readed === false) ?
+                            : (data.read === false) ?
                                 <i class="fas fa-check" />
                             :
                                 <i class="fas fa-check-double" />                        

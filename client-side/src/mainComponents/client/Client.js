@@ -6,6 +6,7 @@ import avatar from '../../img/avatar.jpeg';
 import ChatClient from './ChatClient';
 import ChatClientCloseCase from './ChatClientCloseCase';
 import axios from 'axios';
+import { v4 as uuid } from 'uuid';
 
 
 const ENDPOINT = env.END_POINT;
@@ -69,7 +70,14 @@ export default function Client() {
             });
 
             socket.on('newMessage', (data) => {
-                setMessages(ms => [...ms, data])
+                let id = data.id;
+                setMessages(ms => ms.map((el) => {
+                    if (id === el.id){
+                        el.sended = true;
+                    }
+                    return el;
+                }))
+
             })
 
         }
@@ -78,7 +86,20 @@ export default function Client() {
     //Functions
 
     const sendMessage = () => {
-        socket.emit('sendMessage', {checkData: myData, message: newMessage});
+        
+        let newUuid = uuid();
+        let dataEmit = {id: newUuid, checkData: myData, message: newMessage}
+        
+        socket.emit('sendMessage', dataEmit);
+        
+        let dataStore = {
+            id: newUuid,
+            mssg: newMessage,
+            sended: false,
+            readed: false
+        }
+        setMessages(ms => [...ms, dataStore])
+        
         setNewMessage('');
     }
 

@@ -52,7 +52,20 @@ export default function ChatClient({messages, sendMessage, newMessage, setNewMes
             </div>
             <div className="messages-group">
                 { (messages.length >= 1) ? messages.map( (data) => {
-                    return <div className="me" key={data.id}><p>{data.mssg}</p></div>
+                    return <div className="me" key={data.id}>
+                        <div>
+                            {(data.sended === false) ? 
+                            ''
+                            : (data.readed === false) ?
+                                <i class="fas fa-check" />
+                            :
+                                <i class="fas fa-check-double" />                        
+                            }
+                        </div>
+                        <p>
+                            {data.mssg}
+                        </p>
+                        </div>
                 }) : ''}
             </div>
         </div>

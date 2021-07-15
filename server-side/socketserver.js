@@ -5,7 +5,7 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const redis = require('redis');
 const redisClient = redis.createClient();
-const { v4: uuid } = require('uuid');
+const { v4: uuid, validate: uuidValidate } = require('uuid');
 
 //The env
 require('dotenv').config()
@@ -66,6 +66,8 @@ io.on("connection", (socket) => {
 
       let checkData = data.checkData;
 
+      let validUuid = uuidValidate(data.id);
+
       redisClient.hgetall(socket.id, (err, redisBackData) => {
          
          if (err){
@@ -77,7 +79,7 @@ io.on("connection", (socket) => {
 
                let now = new Date();
                let messageData = {
-                  id: uuid(),
+                  id: (validUuid) ? data.id : uuid(),
                   sender_id: 'me',
                   mssg: data.message,
                   date: now
@@ -85,7 +87,7 @@ io.on("connection", (socket) => {
 
                socket.emit("newMessage", messageData);
 
-               redisClient.rpush(checkData.id, [messageData.id, 'me', messageData.mssg, now], (err) => {
+               redisClient.rpush(checkData.id, [messageData.id, 'me', messageData.mssg, true, false, now], (err) => {
                   if (err) {
                      console.log(err);
                   }

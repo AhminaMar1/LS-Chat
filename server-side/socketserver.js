@@ -75,14 +75,17 @@ io.on("connection", (socket) => {
             if(redisBackData && redisBackData.user_id == checkData.id && redisBackData.token == checkData.token) {
                //send to admins
 
+               let now = new Date();
                let messageData = {
                   id: uuid(),
-                  mssg: data.message
+                  sender_id: 'me',
+                  mssg: data.message,
+                  date: now
                }
 
                socket.emit("newMessage", messageData);
 
-               redisClient.rpush(checkData.id, [messageData.id, messageData.mssg], (err) => {
+               redisClient.rpush(checkData.id, [messageData.id, 'me', messageData.mssg, now], (err) => {
                   if (err) {
                      console.log(err);
                   }

@@ -5,6 +5,7 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const redis = require('redis');
 const redisClient = redis.createClient();
+const { v4: uuid } = require('uuid');
 
 //The env
 require('dotenv').config()
@@ -74,9 +75,14 @@ io.on("connection", (socket) => {
             if(redisBackData && redisBackData.user_id == checkData.id && redisBackData.token == checkData.token) {
                //send to admins
 
-               socket.emit("newMessage", {new: data.message});
+               let messageData = {
+                  id: uuid(),
+                  mssg: data.message
+               }
 
-               redisClient.rpush(checkData.id, data.message, (err) => {
+               socket.emit("newMessage", messageData);
+
+               redisClient.rpush(checkData.id, [messageData.id, messageData.mssg], (err) => {
                   if (err) {
                      console.log(err);
                   }

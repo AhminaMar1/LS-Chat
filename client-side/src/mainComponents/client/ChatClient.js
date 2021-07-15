@@ -51,8 +51,8 @@ export default function ChatClient({messages, sendMessage, newMessage, setNewMes
                 <textarea name="message" value={newMessage} onKeyDown={handleKeyDown} onChange={(e) => handleChange(e)}></textarea>
             </div>
             <div>
-                { (messages.length >= 1) ? messages.map( (mssg, key) => {
-                    return <p key={key}>{mssg.new}</p>
+                { (messages.length >= 1) ? messages.map( (data) => {
+                    return <p key={data.id}>{data.mssg}</p>
                 }) : ''}
             </div>
         </div>

@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Baloo+Tammudu+2&display=swap');
 $primary-color: #378fb4;
+$bg-chat-color: #98D0E9;
 
 body{
     margin: 0;
@@ -223,6 +224,37 @@ body{
     }
 }
 
+.messages-group{
+    box-sizing: border-box;
+    width: 100%;
+    padding: 1px 10px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    height: 100%;
+    padding-bottom: 105px;
+    div{
+        display: flex;
+        margin: 3px 0;
+
+        p{
+            max-width: 70%;
+            margin: 0;
+            padding: 6px 20px 0 20px;
+            border-radius: 30px;
+            text-align: left;
+            margin-block-start: 0;
+            margin-block-end: 0;
+            background-color: #cfcfcf;
+        }
+    }
+    .me{
+        direction: rtl;
+        p{
+            background-color: $bg-chat-color;
+        }
+    }
+}
 @media(max-width: 1000px){
     .chat-client{
         margin-left: 30%;

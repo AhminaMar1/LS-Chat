@@ -50,9 +50,9 @@ export default function ChatClient({messages, sendMessage, newMessage, setNewMes
                 </div>
                 <textarea name="message" value={newMessage} onKeyDown={handleKeyDown} onChange={(e) => handleChange(e)}></textarea>
             </div>
-            <div>
+            <div className="messages-group">
                 { (messages.length >= 1) ? messages.map( (data) => {
-                    return <p key={data.id}>{data.mssg}</p>
+                    return <div className="me" key={data.id}><p>{data.mssg}</p></div>
                 }) : ''}
             </div>
         </div>

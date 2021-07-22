@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import '../../styles/login.scss';
 import axios from 'axios';
 import env from "react-dotenv";
+import Wait from './components/Wait';
 
 
 const API_URL = env.API_URL;
@@ -132,7 +133,7 @@ export default function Login(){
     
     return(
         <>
-            {hidAll ? 'Wait Please...' : ''}
+            {hidAll ? <Wait /> : ''}
             <div className="login-main-container" style={hidAll ? {display: 'none'} : {display: 'block'}}>
                 { (statusLogin === false) ? 'The login information is wrong' : ''}
                 <section className="login-section">

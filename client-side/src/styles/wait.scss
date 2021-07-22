@@ -1,0 +1,23 @@
+$pr-color-darken: #3c7188;
+
+
+.container-wait{
+    background-color: #ccc;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    img{
+        width: 70px;
+    }
+
+    b{
+        color: #444;
+        font-weight: 600;
+    }
+
+
+}

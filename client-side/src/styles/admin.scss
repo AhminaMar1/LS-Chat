@@ -452,6 +452,48 @@ input:focus{
 }
 
 
+/* Flash message */
+
+.contianer-flash-message{
+    
+    /*default background*/
+    background-color: #ffeb85;
+    border: 2px dashed #777;
+    position: fixed;
+    right: 10px;
+    top: 10px;
+    max-width: 300px;
+    .close{
+        box-sizing: border-box;
+        float: right;
+        font-size: 22px;
+        cursor: pointer;
+        width: 25px;
+        height: 25px;
+        
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &:hover{
+            color: #000;
+            font-weight: 600;
+        }
+    }
+
+    .counter{
+        float: left;
+        padding: 5px;
+        font-size: 13px;
+        color: rgb(255, 125, 125);
+    }
+
+    p{
+        color: #333;
+        padding: 20px 15px 15px 15px;
+    }
+
+}
+
 
 /* The media for a min screen*/
 @media (max-width: 1000px){

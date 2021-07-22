@@ -3,11 +3,14 @@ import '../../styles/login.scss';
 import axios from 'axios';
 import env from "react-dotenv";
 import Wait from './components/Wait';
+import FlashMessage from './components/FlashMessage'
 
 
 const API_URL = env.API_URL;
-
+const inputsWrong = "the username or the password is wrong";
 export default function Login(){
+
+
     //apiURL
 
     //DemoAccount to test the app
@@ -135,7 +138,7 @@ export default function Login(){
         <>
             {hidAll ? <Wait /> : ''}
             <div className="login-main-container" style={hidAll ? {display: 'none'} : {display: 'block'}}>
-                { (statusLogin === false) ? 'The login information is wrong' : ''}
+                { (statusLogin === false) ? <FlashMessage toHid={setStatusLogin} newToHidState={true} message={inputsWrong} /> : ''}
                 <section className="login-section">
                     <div className="login-container">
                         <h1>Login</h1>

@@ -57,9 +57,9 @@ export default function ChatClient({messages, sendMessage, newMessage, setNewMes
                             {(data.sent === false) ? 
                             ''
                             : (data.read === false) ?
-                                <i class="fas fa-check" />
+                                <i className="fas fa-check" />
                             :
-                                <i class="fas fa-check-double" />                        
+                                <i className="fas fa-check-double" />                        
                             }
                         </div>
                         <p>

@@ -20,10 +20,11 @@ exports.login= async (req, res) => {
             let result = {
                 success_login: false,
             }
-            res.status(400).json(result)
+            res.status(200).json(result)
         } else {
             let result = {
                 success_login: true,
+                id: data._id,
                 token: data.token
             }
             res.status(200).json(result)

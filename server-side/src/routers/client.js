@@ -5,8 +5,7 @@ const clientController = require('../controllers/client');
 //gets from mongoDB
 
 //Get my lastest doc-mssg
-router.get('/lastchatdoc' , (req , res)=>{
-})
+router.get('/lastchatdoc' , clientController.lastChatDoc)
 
 // Get the prev doc-mssgs
 router.get('/prevchatdoc' , (req , res)=>{

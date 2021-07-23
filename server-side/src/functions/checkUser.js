@@ -12,6 +12,9 @@ exports.storageForCheking = async (data, redisClient, socketId, io) => {
                 token: data.token,
                 name: name
             }
+            let userQuery = 'USER:'+id;
+            redisClient.set(userQuery, data.token, (err) => {console.log(err)});
+
             redisClient.hmset(socketId, hmData);
             let keyOfList = "sl_"+id; // sl = sockets list
             redisClient.rpush(keyOfList, socketId, (err) => {

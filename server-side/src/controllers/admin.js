@@ -1,7 +1,7 @@
 const redis = require('redis');
 const redisClient = redis.createClient();
 //connet with redis
-redisClient.on('connect', () => console.log('Redis connect'));
+redisClient.on('connect', () => console.log('Redis admin connect'));
 
 const Admin = require('../models/admin')
 const bcrypt = require ('bcrypt');

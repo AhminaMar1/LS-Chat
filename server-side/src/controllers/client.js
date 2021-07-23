@@ -1,7 +1,32 @@
+const redis = require('redis');
+const redisClient = redis.createClient();
+//connet with redis
+redisClient.on('connect', () => console.log('Redis client connect'));
+
 const User = require('../models/user')
 const Chat = require('../models/chat')
 
 exports.lastChatDoc = (req, res) => {
+
+    let id = req.query.id;
+    let token = req.query.token;
+
+    if(id && token) {
+        let userQuery = 'USER:'+id;
+        redisClient.get(userQuery, (err, data) => {
+            if(!err && data && token===data){
+                redisClient.lrange(id, 0, -1, (err, ResData) => {
+
+                    if(err) {
+
+                    } else {
+                        res.status(200).json(ResData);
+                    }
+
+                })
+            }
+        })
+    }
     
 }
 

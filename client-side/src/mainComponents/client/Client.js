@@ -51,7 +51,7 @@ export default function Client() {
 
     }, []);
 
-    
+    //Init the socket
     useEffect(() => {
         const socket = socketIOClient(ENDPOINT);
         
@@ -62,6 +62,19 @@ export default function Client() {
         setSocket(socket);
     }, [])
 
+      //First GET
+    useEffect(() => {
+        if(myData && myData.id && myData.token){
+            axios.get(`${API_URL}/client/lastchatdoc?id=${myData.id}&token=${myData.token}`)
+            .then((data) => {
+                console.log(data)
+            
+        }).catch((err) => console.log(err));
+        }
+
+    }, [myData])
+
+    //Add same listeners and new redis session SOCKETS
     useEffect(() => {
         if(myData.id){
             socket.emit('newRedisSession', {
@@ -83,6 +96,7 @@ export default function Client() {
         }
 
     }, [myData, socket])
+
     //Functions
 
     const sendMessage = () => {

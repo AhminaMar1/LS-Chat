@@ -1,4 +1,7 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState} from 'react';
+import {createStore} from 'redux';
+import {Provider} from 'react-redux';
+import Reducers from './reducers/Reducers'
 import NormalScreen from './AdminNormalScreen';
 import SmallScreen from './AdminSmallScreen';
 import socketIOClient from "socket.io-client";
@@ -6,9 +9,11 @@ import env from "react-dotenv";
 
 const ENDPOINT = env.END_POINT;
 
-
 function Admin() {
 
+  //Create redux store
+  const store = createStore(Reducers)
+  
   //States
   const [socket, setSocket] = useState();
   const [windowWidth, setWindowWidth] = useState(1400);
@@ -78,7 +83,11 @@ function Admin() {
   return (
     <div>
       {console.log(onlineUsers)}
-      {windowWidth>1000?<NormalScreen />:<SmallScreen />}
+      <Provider store={store}>
+        {windowWidth > 1000 ?
+                    <NormalScreen />
+                    :<SmallScreen />}
+      </Provider>
     </div>
   );
 }

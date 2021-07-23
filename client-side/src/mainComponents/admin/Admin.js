@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import NormalScreen from './AdminNormalScreen';
 import SmallScreen from './AdminSmallScreen';
 import socketIOClient from "socket.io-client";
@@ -13,6 +13,32 @@ function Admin() {
   const [socket, setSocket] = useState();
   const [windowWidth, setWindowWidth] = useState(1400);
   const [onlineUsers, setOnlineUsers] = useState([]);
+
+  //Functons
+
+  /*
+    The same data, We use this method to avoid using the useCalback
+    because if we had used useCallback the function will change every change the online users
+    and changed this function will lead to continuous change in the socket listener of the "newOnlineUser"
+  */
+  const addNewOnlineUser = (data) => {
+    setOnlineUsers( list => {
+
+      let existe = list.some( (el) => {
+        return (el.id === data.id);
+      })
+
+      if(existe){
+        return list;
+      } else {
+        return [...list, data];
+      }
+
+
+    });
+  }
+
+  
   //Effects
   useEffect(() => {
     setWindowWidth(window.innerWidth);
@@ -29,11 +55,11 @@ function Admin() {
     });
 
     socket.emit("ImAdmin", data => {
-      console.log(data);
+      console.log("data");
     });
 
     socket.on("newOnlineUser", data => {
-      console.log(data);
+      addNewOnlineUser(data);
     })
 
     socket.on("RemoveFromOnlineUsers", data => {

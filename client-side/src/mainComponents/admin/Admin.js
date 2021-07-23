@@ -36,7 +36,7 @@ function Admin() {
       if(existe){
         return list;
       } else {
-        return [...list, data];
+        return [data, ...list];
       }
 
 

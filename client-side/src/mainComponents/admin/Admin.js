@@ -3,11 +3,13 @@ import socketIOClient from "socket.io-client";
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
 import Reducers from './reducers/Reducers'
+import axios from 'axios';
 import NormalScreen from './AdminNormalScreen';
 import SmallScreen from './AdminSmallScreen';
 import env from "react-dotenv";
 
 const ENDPOINT = env.END_POINT;
+const API_URL = env.API_URL;
 
 function Admin() {
 
@@ -15,6 +17,7 @@ function Admin() {
   const store = createStore(Reducers)
   
   //States
+  const [adminData, setAdminData] = useState();
   const [socketOn, setSocketOn] = useState(false)
   const [socket, setSocket] = useState();
   const [windowWidth, setWindowWidth] = useState(1400);
@@ -55,8 +58,41 @@ function Admin() {
     window.addEventListener('resize', ()=>{
       setWindowWidth(window.innerWidth);
     });
+
+    let id = localStorage.getItem('ltc_admin_id');
+    let token = localStorage.getItem('ltc_admin_token');
+
+    setAdminData({
+      id,
+      token
+    });
+
+
   }, []);
 
+  //First GET
+  useEffect(() => {
+    if(adminData && adminData.id && adminData.token){
+      axios.get(`${API_URL}/admin/firstget?admin_id=${adminData.id}&admin_token=${adminData.token}`)
+      .then((data) => {
+        
+        let obj = data.data.onlines;
+        let arr = [];
+        Object.keys(obj).forEach(function(key) {
+          arr.push({
+            id: key,
+            name: obj[key]
+          })
+        });
+
+        setOnlineUsers(arr);
+        
+      }).catch((err) => console.log(err));
+    }
+
+  }, [adminData])
+
+  //Start the socket
   useEffect(() => {
     const socket = socketIOClient(ENDPOINT);
     
@@ -69,19 +105,14 @@ function Admin() {
     setSocketOn(true);
   }, [])
   
-  
+  //If socket start => create the listeners and send the first
   useEffect(() => {    
-    if(socketOn){
+    if(socketOn && adminData && adminData.id && adminData.token){
       
-      let id = localStorage.getItem('ltc_admin_id');
-      let token = localStorage.getItem('ltc_admin_token');
-      
-      if(id && token){
-        socket.emit('ImAdmin', {
-          admin_id: id,
-          admin_token: token
-        });
-      }
+      socket.emit('ImAdmin', {
+        admin_id: adminData.id,
+        admin_token: adminData.token
+      });
 
       socket.on("newOnlineUser", data => {
         addNewOnlineUser(data);
@@ -92,7 +123,7 @@ function Admin() {
       });
 
     }
-  }, [socketOn, socket]);
+  }, [socketOn, adminData, socket]);
 
   //
   return (

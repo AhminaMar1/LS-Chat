@@ -9,7 +9,27 @@ const bcrypt = require ('bcrypt');
 
 exports.firstGet= (req, res) => {
 
-    res.json({test: "Json test succes"});
+    console.log(req.query)
+    if(req.query && req.query.admin_id && req.query.admin_token) {
+        let queryGetAdmin = 'ADMIN:'+req.query.admin_id;
+        redisClient.get(queryGetAdmin, (err, data)=> {
+            if(err){
+
+            } else if (data && data ===req.query.admin_token){
+
+                redisClient.hgetall('onlines', (err, onlinesData) => {
+
+                    if(!err && onlinesData) {
+                        res.json({onlines: onlinesData});
+                    }
+                    
+                })
+
+            }
+        })
+    }
+
+    
 }
 
 exports.moreConversations= (req, res) => {

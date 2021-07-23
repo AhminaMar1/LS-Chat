@@ -56,10 +56,16 @@ io.on("connection", (socket) => {
 
    socket.emit('FromAPI', {date: new Date()})
 
+   //Join a new admin - ADMIN room
+
+   socket.on('ImAdmin', (data) => {
+      socket.join('ADMIN');
+   });
+
    //Save a new session in redis when the user is connet
 
    socket.on('newRedisSession', (data) => {
-      checkUser.storageForCheking(data, redisClient, socket.id);
+      checkUser.storageForCheking(data, redisClient, socket.id, io);
    })
    
    socket.on("sendMessage", (data) => {
@@ -121,6 +127,7 @@ io.on("connection", (socket) => {
                         }else if(num < 1){
                            redisClient.hdel('onlines', id);
                           //Send the updating of the list of onlines to the Admins
+                          io.to('ADMIN').emit('RemoveFromOnlineUsers', {id: id});
                         }
                      });
                   }

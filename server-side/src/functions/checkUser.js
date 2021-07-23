@@ -1,5 +1,5 @@
 
-exports.storageForCheking = async (data, redisClient, socketId) => {
+exports.storageForCheking = async (data, redisClient, socketId, io) => {
     const User = require('../models/user');
     User.findById(data.user_id, (err, user) => {
         if (err || !user || !data.token || data.token !== user.token) {
@@ -29,6 +29,7 @@ exports.storageForCheking = async (data, redisClient, socketId) => {
                     console.log(err);
                 } else {
                     //Send the updating of the list of onlines to the Admins
+                    io.to('ADMIN').emit("newOnlineUser", {id: id, name: name})
                 }
 
             });

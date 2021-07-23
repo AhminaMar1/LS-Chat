@@ -17,7 +17,7 @@ function Admin() {
   const store = createStore(Reducers)
   
   //States
-  const [adminData, setAdminData] = useState();
+  const [adminData, setAdminData] = useState({id: false, token: false});
   const [socketOn, setSocketOn] = useState(false)
   const [socket, setSocket] = useState();
   const [windowWidth, setWindowWidth] = useState(1400);

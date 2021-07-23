@@ -17,7 +17,7 @@ export default function Client() {
 
     //States
     const [togleState, setToggleState] = useState(true);
-    const [myData, setMyData] = useState({id: false});
+    const [myData, setMyData] = useState({id: false, token:false});
 
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');

@@ -38,6 +38,10 @@ function Admin() {
     });
   }
 
+  const removeAnOnlineUser = (data) => {
+    setOnlineUsers( list => list.filter(el => el.id !== data.id));
+  }
+
   
   //Effects
   useEffect(() => {
@@ -63,7 +67,7 @@ function Admin() {
     })
 
     socket.on("RemoveFromOnlineUsers", data => {
-      console.log(data);
+      removeAnOnlineUser(data)
     })
 
     setSocket(socket);

@@ -4,7 +4,7 @@ import ConversationBoxes from './components/ConversationBoxes';
 import NavbarSS from './components/NavbarSS';
 import OnlineUsers from './components/OnlineUsers';
 
-export default function SmallScreen(){
+export default function SmallScreen({onlineUsers}){
 
     //states
     const [blockId, setBlockId] = useState(1); // 0, 1, or 2
@@ -25,7 +25,7 @@ export default function SmallScreen(){
                     : (blockId===1) ? 
                     <ConversationBoxes setChatBoxActive={setChatBoxActive}/> 
                     : (blockId===2) ? 
-                    <OnlineUsers setChatBoxActive={setChatBoxActive}/> 
+                    <OnlineUsers onlineUsers={onlineUsers} setChatBoxActive={setChatBoxActive}/> 
                     : ''}
                 </div>
             </main>

@@ -82,11 +82,10 @@ function Admin() {
   //
   return (
     <div>
-      {console.log(onlineUsers)}
       <Provider store={store}>
         {windowWidth > 1000 ?
-                    <NormalScreen />
-                    :<SmallScreen />}
+                    <NormalScreen onlineUsers={onlineUsers} />
+                    :<SmallScreen onlineUsers={onlineUsers}/>}
       </Provider>
     </div>
   );

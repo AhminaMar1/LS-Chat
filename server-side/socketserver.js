@@ -59,7 +59,20 @@ io.on("connection", (socket) => {
    //Join a new admin - ADMIN room
 
    socket.on('ImAdmin', (data) => {
-      socket.join('ADMIN');
+
+      console.log('Ccccccccccc')
+
+      if(data && data.admin_id){
+         let queryGetAdmin = 'ADMIN:'+data.admin_id;
+         redisClient.get(queryGetAdmin, (err, dataRedis) => {
+            if(err) {
+
+            } else if (dataRedis && dataRedis === data.admin_token){
+               socket.join('ADMIN');
+            }
+         })
+      }
+
    });
 
    //Save a new session in redis when the user is connet

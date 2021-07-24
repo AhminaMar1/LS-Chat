@@ -20,8 +20,13 @@ LS-Chat it's acronym for: the live support chat
 
 # all client API
 
-[link of client API of LS-Chat](./https://github.com/AhminaMar1/LS-Chat/blob/main/api.http)
+[link of client API of LS-Chat](./api.http)
 
 # Database diagram (MongoDB)
 
 ![database diagram of LS-Chat](./database-diagram.png)
+
+
+# Status of check of messages
+
+![Status of check of messages](./Status-of-check-message.png)

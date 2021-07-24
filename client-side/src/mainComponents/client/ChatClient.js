@@ -45,13 +45,13 @@ export default function ChatClient({messages, sendMessage, newMessage, setNewMes
                 </div>
                 <div onClick={()=>setToggleState(false)} className="toggle-when-click"></div>
             </div>
+            <Messages messages={messages} />
             <div className="input-group">
                 <div className="button-flex">
                     <button><i className="far fa-paper-plane" /></button>
                 </div>
                 <textarea name="message" value={newMessage} onKeyDown={handleKeyDown} onChange={(e) => handleChange(e)}></textarea>
             </div>
-            <Messages messages={messages} />
         </div>
     )
 }

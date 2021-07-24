@@ -5,7 +5,7 @@ export default function Messages({messages}) {
 
         <div className="messages-group">
             { (messages.length >= 1) ? messages.map( (data) => {
-                return <div className="me" key={data.id}>
+                return <div className={data.from === "me" ? 'me' : ''} key={data.id}>
                     <div>
                         {(data.seen === true) ?
                             <i className="fas fa-check-double check-active"/>

@@ -106,7 +106,7 @@ io.on("connection", (socket) => {
 
                socket.emit("newMessage", messageData);
 
-               redisClient.rpush(checkData.id, [messageData.id, 'me', messageData.mssg, true, false, now], (err) => {
+               redisClient.rpush(checkData.id, [messageData.id, 'me', messageData.mssg, false, false, now], (err) => {
                   if (err) {
                      console.log(err);
                   }

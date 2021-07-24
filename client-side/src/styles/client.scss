@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Baloo+Tammudu+2&display=swap');
 $primary-color: #378fb4;
 $bg-chat-color: #98D0E9;
+$active-chat: #82bdd8;
 
 body{
     margin: 0;
@@ -183,6 +184,10 @@ body{
     }
 }
 
+//Check
+.check-active{
+    color: $active-chat;
+}
 
 //Close case
 .chat-client-close-case{
@@ -264,6 +269,8 @@ body{
         }
     }
 }
+
+
 @media(max-width: 1000px){
     .chat-client{
         margin-left: 30%;

@@ -57,6 +57,7 @@ export default function Client() {
         
         socket.on("FromAPI", data => {
             console.log(data);
+
         });
 
         setSocket(socket);
@@ -67,7 +68,23 @@ export default function Client() {
         if(myData && myData.id && myData.token){
             axios.get(`${API_URL}/client/lastchatdoc?id=${myData.id}&token=${myData.token}`)
             .then((data) => {
-                console.log(data)
+
+                let allMssg = data.data;
+                let mssgArr = [];
+                console.log(allMssg);
+
+                for(let i = 0; i < allMssg.length; i=i+6){
+                    let dataStore = {
+                        id: allMssg[i],
+                        mssg: allMssg[i+2],
+                        sent: true,
+                        reach: (allMssg[i+3] === 'true' ? true : false),
+                        seen: (allMssg[i+4] === 'true' ? true : false)
+                    }
+                    mssgArr.push(dataStore);
+                }
+
+                setMessages(mssgArr)
             
         }).catch((err) => console.log(err));
         }
@@ -110,7 +127,8 @@ export default function Client() {
             id: newUuid,
             mssg: newMessage,
             sent: false,
-            read: false
+            reach: false,
+            seen: false
         }
         setMessages(ms => [...ms, dataStore])
         

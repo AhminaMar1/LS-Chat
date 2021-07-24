@@ -54,12 +54,13 @@ export default function ChatClient({messages, sendMessage, newMessage, setNewMes
                 { (messages.length >= 1) ? messages.map( (data) => {
                     return <div className="me" key={data.id}>
                         <div>
-                            {(data.sent === false) ? 
-                            ''
-                            : (data.read === false) ?
+                            {(data.seen === true) ?
+                                <i className="fas fa-check-double check-active"/>
+                            : (data.reach === true) ?
+                                <i className="fas fa-check-double" />
+                            : (data.sent === true) ?
                                 <i className="fas fa-check" />
-                            :
-                                <i className="fas fa-check-double" />                        
+                            : ''
                             }
                         </div>
                         <p>

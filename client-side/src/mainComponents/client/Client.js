@@ -71,7 +71,6 @@ export default function Client() {
 
                 let allMssg = data.data;
                 let mssgArr = [];
-                console.log(allMssg);
 
                 for(let i = 0; i < allMssg.length; i=i+6){
                     let dataStore = {

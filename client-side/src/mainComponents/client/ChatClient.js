@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import Messages from './Messages';
 
 export default function ChatClient({messages, sendMessage, newMessage, setNewMessage, avatar, setToggleState}) {
 
@@ -50,25 +51,7 @@ export default function ChatClient({messages, sendMessage, newMessage, setNewMes
                 </div>
                 <textarea name="message" value={newMessage} onKeyDown={handleKeyDown} onChange={(e) => handleChange(e)}></textarea>
             </div>
-            <div className="messages-group">
-                { (messages.length >= 1) ? messages.map( (data) => {
-                    return <div className="me" key={data.id}>
-                        <div>
-                            {(data.seen === true) ?
-                                <i className="fas fa-check-double check-active"/>
-                            : (data.reach === true) ?
-                                <i className="fas fa-check-double" />
-                            : (data.sent === true) ?
-                                <i className="fas fa-check" />
-                            : ''
-                            }
-                        </div>
-                        <p>
-                            {data.mssg}
-                        </p>
-                        </div>
-                }) : ''}
-            </div>
+            <Messages messages={messages} />
         </div>
     )
 }

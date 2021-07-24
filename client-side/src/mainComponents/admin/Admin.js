@@ -130,8 +130,8 @@ function Admin() {
     <div>
       <Provider store={store}>
         {windowWidth > 1000 ?
-                    <NormalScreen onlineUsers={onlineUsers} />
-                    :<SmallScreen onlineUsers={onlineUsers}/>}
+                    <NormalScreen adminData={adminData} onlineUsers={onlineUsers} />
+                    :<SmallScreen adminData={adminData} onlineUsers={onlineUsers}/>}
       </Provider>
     </div>
   );

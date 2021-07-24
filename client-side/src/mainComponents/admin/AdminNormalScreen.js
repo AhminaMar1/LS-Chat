@@ -1,24 +1,23 @@
-import React from 'react';
+import React, {useState} from 'react';
 import ChatBox from './components/ChatBox';
 import ConversationBoxes from './components/ConversationBoxes';
 import NavbarNS from './components/NavbarNS';
 import OnlineUsers from './components/OnlineUsers';
 
-export default function NormalScreen({onlineUsers}){
+export default function NormalScreen({adminData, onlineUsers}){
 
-    const setChatBoxActive = () => {
-        //Currently it is null
-    }
+    const [chatBoxActive, setChatBoxActive] = useState(false);
+
     
     return(
         <div className="main-container-admin">
             <header>
-                <NavbarNS />
+                <NavbarNS chatBoxActive={chatBoxActive}/>
             </header>
             <main>
                 <div className="flex">
                     <ConversationBoxes setChatBoxActive={setChatBoxActive}/>
-                    <ChatBox />
+                    <ChatBox adminData={adminData} chatBoxActive={chatBoxActive}/>
                     <OnlineUsers onlineUsers={onlineUsers} setChatBoxActive={setChatBoxActive}/>
                 </div>
             </main>

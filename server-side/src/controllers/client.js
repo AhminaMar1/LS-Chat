@@ -6,26 +6,46 @@ redisClient.on('connect', () => console.log('Redis client connect'));
 const User = require('../models/user')
 const Chat = require('../models/chat')
 
+
 exports.lastChatDoc = (req, res) => {
+
+    const getLRange = (redisClient, id, res) => {
+        redisClient.lrange(id, 0, -1, (err, ResData) => {
+
+            if(err) {
+
+            } else {
+                res.status(200).json(ResData);
+            }
+
+        })
+    }
 
     let id = req.query.id;
     let token = req.query.token;
+    let admin = req.query.admin;
 
     if(id && token) {
         let userQuery = 'USER:'+id;
         redisClient.get(userQuery, (err, data) => {
             if(!err && data && token===data){
-                redisClient.lrange(id, 0, -1, (err, ResData) => {
-
-                    if(err) {
-
-                    } else {
-                        res.status(200).json(ResData);
-                    }
-
-                })
+                getLRange(redisClient, id, res);
             }
         })
+    }else if (admin) {
+
+        let adminId = req.query.admin_id;
+        let adminToken = req.query.admin_token;
+        let userId = req.query.id_user;
+        
+        if(adminId && adminToken && userId) {
+            let adminQuery = 'ADMIN:'+adminId;
+            redisClient.get(adminQuery, (err, data) => {
+                if(!err && data && adminToken===data){
+                    getLRange(redisClient, userId, res);
+                }
+            })
+        }
     }
     
 }

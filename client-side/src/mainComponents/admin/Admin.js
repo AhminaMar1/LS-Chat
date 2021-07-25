@@ -5,6 +5,7 @@ import adminDataReducer from './reducers/AdminDataReducer'
 import tokenIsValidReducer from './reducers/TokenIsValidReducer'
 import onlineUsersReducer from './reducers/OnlineUsersReducer'
 import chatBoxActiveReducer from './reducers/ChatBoxActiveReducer'
+import messagesReducer from './reducers/MessagesReducer'
 import AdminUnified from './AdminUnified';
 
 function Admin() {
@@ -15,6 +16,7 @@ function Admin() {
     tokenIsValid: tokenIsValidReducer,
     chatBoxActive: chatBoxActiveReducer,
     onlineUsers: onlineUsersReducer,
+    messages: messagesReducer,
   })
   
   //States

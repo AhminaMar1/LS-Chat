@@ -3,6 +3,7 @@ const initialState = {
     tokenIsValid: false,
     chatBoxActive: false,
     onlineUsers: [],
+    messages: []
   }
   
   const combineReducers = reducers => {

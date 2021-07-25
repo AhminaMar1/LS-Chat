@@ -1,12 +1,10 @@
-import React, {useState} from 'react';
+import React from 'react';
 import ChatBox from './components/ChatBox';
 import ConversationBoxes from './components/ConversationBoxes';
 import NavbarNS from './components/NavbarNS';
 import OnlineUsers from './components/OnlineUsers';
 
 export default function NormalScreen(){
-
-    const [chatBoxActive, setChatBoxActive] = useState(false);
 
     
     return(
@@ -16,9 +14,9 @@ export default function NormalScreen(){
             </header>
             <main>
                 <div className="flex">
-                    <ConversationBoxes setChatBoxActive={setChatBoxActive}/>
+                    <ConversationBoxes />
                     <ChatBox/>
-                    <OnlineUsers setChatBoxActive={setChatBoxActive}/>
+                    <OnlineUsers />
                 </div>
             </main>
         </div>

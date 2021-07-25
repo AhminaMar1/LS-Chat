@@ -8,94 +8,27 @@ const API_URL = env.API_URL;
 
 export default function ChatBox() {
 
-    const [{adminData, chatBoxActive}] = useAppState();
+    const [{adminData, chatBoxActive, messages}, dispath] = useAppState();
     useEffect(() => {
         if(chatBoxActive && adminData && adminData.id && adminData.token) {
             axios.get(`${API_URL}/client/lastchatdoc?admin=yes&admin_id=${adminData.id}&admin_token=${adminData.token}&id_user=${chatBoxActive}`)
                 .then((data) => {
-                    let mssgArr = messagesOrder(data.data || []);
-
-                    //Todo we need to store it under a state of message - with Redux
-                    console.log(mssgArr);
+                    dispath({type: 'addMessages', payload: messagesOrder(data.data || [])});
                 
             }).catch((err) => console.log(err));
         }
-    }, [chatBoxActive, adminData])
+    }, [chatBoxActive, adminData, dispath])
 
     return (
         <div className="flex-chat-box" id="chat-display">
             <div className="chat-container">
-                <div className="chat-msg">
-                    <p className="chat-msg-me">
-                        Lorem ipsum dolor, sit amet consectetur adipisicing elit
-                    </p>
-                </div>
-
-                <div className="chat-msg">
-                    <p className="chat-msg-user">
-                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aut quidem, saepe veniam iure quas error possimus expedita ipsa nostrum minima?
-                    </p>
-                </div>
-
-                <div className="chat-msg">
-                    <p className="chat-msg-me">
-                        Lorem ipsum dolor, sit amet consectetur adipisicing elit
-                    </p>
-                </div>
-
-                <div className="chat-msg">
-                    <p className="chat-msg-user">
-                        Lorem ipsum dolor sit amet consectetur.
-                    </p>
-                </div>
-
-                <div className="chat-msg">
-                    <p className="chat-msg-user">
-                        Okay
-                    </p>
-                </div>
-
-                <div className="chat-msg">
-                    <p className="chat-msg-me">
-                        Lorem ipsum dolor, sit amet consectetur adipisicing elit
-                    </p>
-                </div>
-
-                <div className="chat-msg">
-                    <p className="chat-msg-user">
-                        Lorem, ipsum.
-                    </p>
-                </div>
-
-                <div className="chat-msg">
-                    <p className="chat-msg-me">
-                        Lorem ipsum dolor, sit amet consectetur adipisicing elit
-                    </p>
-                </div>
-                
-                <div className="chat-msg">
-                    <p className="chat-msg-me">
-                        Lorem ipsum dolor, sit amet consectetur adipisicing elit
-                    </p>
-                </div>
-
-                <div className="chat-msg">
-                    <p className="chat-msg-user">
-                        Okay
-                    </p>
-                </div>
-
-                <div className="chat-msg">
-                    <p className="chat-msg-user">
-                        Lorem, ipsum.
-                    </p>
-                </div>
-
-                <div className="chat-msg">
-                    <p className="chat-msg-user">
-                        Okay
-                    </p>
-                </div>
+                {messages.map((el) => 
+                        <div key={el.id} className="chat-msg">
+                            <p className={el.form === 'me' ? 'chat-msg-me' : 'chat-msg-user'}>
+                                {el.mssg}
+                            </p>
+                        </div>
+                    )}
                 
                 <form>
                     <div className="input-chat-box-flex">

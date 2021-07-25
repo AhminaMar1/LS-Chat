@@ -39,6 +39,8 @@ export default function AdminUnified({windowWidth}) {
       .then((data) => {
 
         dispatch({type: 'addOnlineUsers', payload: data.data.onlines});
+
+        //Todo: We need to add validation..
         dispatch({type: 'tokenIsValid'});
         
       }).catch((err) => console.log(err));

@@ -7,7 +7,7 @@ import ChatClient from './ChatClient';
 import ChatClientCloseCase from './ChatClientCloseCase';
 import axios from 'axios';
 import { v4 as uuid } from 'uuid';
-import {messagesOrder} from '../../functions/messagesOrder';
+import {messagesFormat} from '../../functions/messagesFormat';
 
 
 const ENDPOINT = env.END_POINT;
@@ -70,7 +70,7 @@ export default function Client() {
             axios.get(`${API_URL}/client/lastchatdoc?id=${myData.id}&token=${myData.token}`)
             .then((data) => {
 
-                let mssgArr = messagesOrder(data.data || []);
+                let mssgArr = messagesFormat(data.data || []);
 
                 setMessages(mssgArr)
             

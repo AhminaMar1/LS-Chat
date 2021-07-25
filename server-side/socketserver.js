@@ -104,7 +104,10 @@ io.on("connection", (socket) => {
                   date: now
                }
 
-               socket.emit("newMessage", messageData);
+               socket.emit("newMessage", {id: messageData.id});
+               
+               io.to('ADMIN').emit('newMessage', messageData);
+
 
                redisClient.rpush(checkData.id, [messageData.id, 'me', messageData.mssg, false, false, now], (err) => {
                   if (err) {

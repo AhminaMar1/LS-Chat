@@ -78,6 +78,11 @@ export default function AdminUnified({windowWidth}) {
         dispatch({type: 'removeOneOnlineUser', payload: data})
       });
 
+      socket.on('newMessage', (data) => {
+        dispatch({type: 'addOneMessageFromUser', payload: data});
+      });
+
+
     }
   }, [socketOn, adminData, socket, dispatch]);
 

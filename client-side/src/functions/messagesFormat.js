@@ -1,4 +1,4 @@
-export const messagesOrder = (allMssg) => {
+export const messagesFormat = (allMssg) => {
 
     let mssgArr = [];
 
@@ -15,4 +15,19 @@ export const messagesOrder = (allMssg) => {
         mssgArr.push(dataStore);
     }
     return mssgArr;
+}
+
+export const oneMessageFormat = (data) => {
+    
+    let dataStore = {
+        id: data.id,
+        from: data.sender_id,
+        mssg: data.mssg,
+        sent: true,
+        reach: true,
+        seen: false,
+        date: data.date
+    }
+
+return dataStore;
 }

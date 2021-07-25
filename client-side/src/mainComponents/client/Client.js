@@ -113,6 +113,7 @@ export default function Client() {
         
         let dataStore = {
             id: newUuid,
+            from: 'me',
             mssg: newMessage,
             sent: false,
             reach: false,

@@ -24,7 +24,7 @@ export default function ChatBox() {
             <div className="chat-container">
                 {messages.map((el) => 
                         <div key={el.id} className="chat-msg">
-                            <p className={el.form === 'me' ? 'chat-msg-me' : 'chat-msg-user'}>
+                            <p className={el.from === 'me' ? 'chat-msg-user' : 'chat-msg-admin'}>
                                 {el.mssg}
                             </p>
                         </div>

@@ -4,7 +4,8 @@ import NormalScreen from './AdminNormalScreen';
 import SmallScreen from './AdminSmallScreen';
 import axios from 'axios';
 import env from "react-dotenv";
-import { useAppState } from './reducers/AppState'
+import { useAppState } from './reducers/AppState';
+import Wait from './components/Wait';
 
 
 
@@ -14,7 +15,7 @@ const API_URL = env.API_URL;
 export default function AdminUnified({windowWidth}) {
 
   //States
-  const [{adminData, onlineUsers}, dispatch] = useAppState()
+  const [{adminData, tokenIsValid}, dispatch] = useAppState()
   const [socketOn, setSocketOn] = useState(false);
   const [socket, setSocket] = useState();
 
@@ -37,7 +38,8 @@ export default function AdminUnified({windowWidth}) {
       axios.get(`${API_URL}/admin/firstget?admin_id=${adminData.id}&admin_token=${adminData.token}`)
       .then((data) => {
 
-        dispatch({type: 'addOnlineUsers', payload: data.data.onlines})
+        dispatch({type: 'addOnlineUsers', payload: data.data.onlines});
+        dispatch({type: 'tokenIsValid'});
         
       }).catch((err) => console.log(err));
     }
@@ -79,9 +81,13 @@ export default function AdminUnified({windowWidth}) {
 
     return (
         <div>
-            {windowWidth > 1000 ?
-            <NormalScreen />
-            :<SmallScreen />}
+          {tokenIsValid ?
+            <div>
+              {windowWidth > 1000 ?
+              <NormalScreen />
+              :<SmallScreen />}
+            </div>
+            : <Wait />}
         </div>
     )
 }

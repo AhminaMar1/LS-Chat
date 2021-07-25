@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { AppStateProvider } from './reducers/AppState'
 import {initialState, combineReducers} from './reducers/Reducers'
 import adminDataReducer from './reducers/AdminDataReducer'
+import tokenIsValidReducer from './reducers/TokenIsValidReducer'
 import onlineUsersReducer from './reducers/OnlineUsersReducer'
 import chatBoxActiveReducer from './reducers/ChatBoxActiveReducer'
 import AdminUnified from './AdminUnified';
@@ -11,6 +12,7 @@ function Admin() {
   //Create redux store
   const combineRed = combineReducers({
     adminData: adminDataReducer,
+    tokenIsValid: tokenIsValidReducer,
     chatBoxActive: chatBoxActiveReducer,
     onlineUsers: onlineUsersReducer,
   })

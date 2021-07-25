@@ -1,6 +1,10 @@
 import React from 'react'
+import { useAppState } from '../reducers/AppState';
 
-export default function OnlineUsers({onlineUsers, setChatBoxActive}) {
+export default function OnlineUsers() {
+
+    const [{onlineUsers}, dispatch] = useAppState();
+
     return (
 
         <div className="flex-online-box" id="online-display">
@@ -10,7 +14,7 @@ export default function OnlineUsers({onlineUsers, setChatBoxActive}) {
                 
                 {onlineUsers.map( (el) => {
                     return(
-                        <div onClick={() => setChatBoxActive(el.id)} key={el.id} className="online-item">
+                        <div onClick={() => dispatch({type:'chatBoxActive', payload: el.id})} key={el.id} className="online-item">
                             <div className="online-icon"></div>
                             {el.name}
                         </div>

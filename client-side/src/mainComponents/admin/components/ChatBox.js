@@ -1,12 +1,14 @@
 import React, {useEffect} from 'react';
 import axios from 'axios';
+import { useAppState } from '../reducers/AppState';
 import {messagesOrder} from '../../../functions/messagesOrder';
 import '../../../styles/admin.scss';
 import env from "react-dotenv";
 const API_URL = env.API_URL;
 
-export default function ChatBox({adminData, chatBoxActive}) {
+export default function ChatBox() {
 
+    const [{adminData, chatBoxActive}] = useAppState();
     useEffect(() => {
         if(chatBoxActive && adminData && adminData.id && adminData.token) {
             axios.get(`${API_URL}/client/lastchatdoc?admin=yes&admin_id=${adminData.id}&admin_token=${adminData.token}&id_user=${chatBoxActive}`)

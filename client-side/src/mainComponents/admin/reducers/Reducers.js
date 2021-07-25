@@ -1,10 +1,21 @@
-const initialState = {messages: 0 }
-
-function Reducers(state = initialState , action){   
-    switch(action.type){
-        default:
-            return state;
-    }
-}
-
-export default Reducers;
+const initialState = {
+    adminData: { id: false, token: false },
+    chatBoxActive: false,
+    onlineUsers: [],
+  }
+  
+  const combineReducers = reducers => {
+    return (state, action) => {
+      return Object.keys(reducers).reduce(
+        (acc, prop) => {
+          return ({
+            ...acc,
+            ...reducers[prop]({ [prop]: acc[prop] }, action),
+          })
+        },
+        state
+      )
+    }
+  }
+  
+  export { initialState, combineReducers }

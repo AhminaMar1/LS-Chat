@@ -4,7 +4,7 @@ import ConversationBoxes from './components/ConversationBoxes';
 import NavbarNS from './components/NavbarNS';
 import OnlineUsers from './components/OnlineUsers';
 
-export default function NormalScreen({adminData, onlineUsers}){
+export default function NormalScreen(){
 
     const [chatBoxActive, setChatBoxActive] = useState(false);
 
@@ -12,13 +12,13 @@ export default function NormalScreen({adminData, onlineUsers}){
     return(
         <div className="main-container-admin">
             <header>
-                <NavbarNS chatBoxActive={chatBoxActive}/>
+                <NavbarNS />
             </header>
             <main>
                 <div className="flex">
                     <ConversationBoxes setChatBoxActive={setChatBoxActive}/>
-                    <ChatBox adminData={adminData} chatBoxActive={chatBoxActive}/>
-                    <OnlineUsers onlineUsers={onlineUsers} setChatBoxActive={setChatBoxActive}/>
+                    <ChatBox/>
+                    <OnlineUsers setChatBoxActive={setChatBoxActive}/>
                 </div>
             </main>
         </div>

@@ -4,7 +4,7 @@ import ConversationBoxes from './components/ConversationBoxes';
 import NavbarNS from './components/NavbarNS';
 import OnlineUsers from './components/OnlineUsers';
 
-export default function NormalScreen(){
+export default function NormalScreen({socket}){
 
     
     return(
@@ -15,7 +15,7 @@ export default function NormalScreen(){
             <main>
                 <div className="flex">
                     <ConversationBoxes />
-                    <ChatBox/>
+                    <ChatBox socket={socket}/>
                     <OnlineUsers />
                 </div>
             </main>

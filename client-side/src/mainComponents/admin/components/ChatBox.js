@@ -8,7 +8,7 @@ import { v4 as uuid } from 'uuid';
 
 const API_URL = env.API_URL;
 
-export default function ChatBox() {
+export default function ChatBox({socket}) {
     //States
     const [{adminData, chatBoxActive, messages}, dispath] = useAppState();
     const [clickShift, setClickShift] = useState(false);
@@ -44,7 +44,7 @@ export default function ChatBox() {
         
         //socket.emit('adminSendMessage', dataEmit);
         //Todo: we need to add a listener in the socket for the send-message from admin
-        
+
         let dataStore = {
             id: newUuid,
             from: 'admin-me',

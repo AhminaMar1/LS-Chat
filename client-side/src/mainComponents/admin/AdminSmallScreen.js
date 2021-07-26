@@ -5,7 +5,7 @@ import ConversationBoxes from './components/ConversationBoxes';
 import NavbarSS from './components/NavbarSS';
 import OnlineUsers from './components/OnlineUsers';
 
-export default function SmallScreen(){
+export default function SmallScreen({socket}){
 
     //states
     const [{chatBoxActive}] = useAppState();
@@ -21,7 +21,7 @@ export default function SmallScreen(){
             <main>
                 <div className="flex">
                     {(chatBoxActive) ? 
-                    <ChatBox/> 
+                    <ChatBox socket={socket}/> 
                     : (blockId===1) ? 
                     <ConversationBoxes /> 
                     : (blockId===2) ? 

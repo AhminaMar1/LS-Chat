@@ -91,8 +91,8 @@ export default function AdminUnified({windowWidth}) {
           {tokenIsValid ?
             <div>
               {windowWidth > 1000 ?
-              <NormalScreen />
-              :<SmallScreen />}
+              <NormalScreen socket={socket}/>
+              :<SmallScreen socket={socket}/>}
             </div>
             : <Wait />}
         </div>

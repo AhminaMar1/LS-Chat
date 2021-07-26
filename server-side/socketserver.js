@@ -94,8 +94,7 @@ io.on("connection", (socket) => {
          } else {
             //Checking token
             if(redisBackData && redisBackData.user_id == checkData.id && redisBackData.token == checkData.token) {
-               //send to admins
-
+               
                let now = new Date();
                let messageData = {
                   id: (validUuid) ? data.id : uuid(),
@@ -103,9 +102,10 @@ io.on("connection", (socket) => {
                   mssg: data.message,
                   date: now
                }
-
+               
                socket.emit("newMessage", {id: messageData.id});
                
+               //send to admins
                io.to('ADMIN').emit('newMessage', messageData);
 
 
@@ -119,6 +119,56 @@ io.on("connection", (socket) => {
          }
       })
    });
+
+   socket.on("adminSendMessage", (data) => {
+      let checkData = data.checkData;
+
+      
+      if(checkData) {
+         let adminQuery = 'ADMIN:'+checkData.id;
+         redisClient.get(adminQuery, (err, token) => {
+            if (err) {
+               console.log(err);
+            } else if(token && token === checkData.token) {
+               //Succes
+               
+               let validUuid = uuidValidate(data.id);
+               let now = new Date();
+               let messageData = {
+                  id: (validUuid) ? data.id : uuid(),
+                  sender_id: 'admin',
+                  mssg: data.message,
+                  date: now
+               }
+
+
+               
+               
+               io.to('ADMIN').emit('newMessage', messageData);
+               
+               let socketList = 'sl_'+data.to; 
+               redisClient.lrange(socketList, 0, -1, (err, allSockets) => {
+
+                  //Todo: we need to send to all these sockets (allSockets)
+                  //socket.emit("newMessage", messageData);
+                  
+               })
+
+
+               redisClient.rpush(data.to, [messageData.id, 'admin', messageData.mssg, false, false, now], (err) => {
+                  if (err) {
+                     console.log(err);
+                  }
+               })
+
+            }else{
+               console.log('The token admin is wrong');
+            }
+         });
+
+      }
+   });
+   
 
    
    socket.on("disconnect", () => {

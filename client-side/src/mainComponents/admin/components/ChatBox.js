@@ -40,9 +40,9 @@ export default function ChatBox({socket}) {
     const sendMessage = () => {
 
         let newUuid = uuid();
-        //let dataEmit = {id: newUuid, checkData: adminData, to: chatBoxActive, message: newMessage}
+        let dataEmit = {id: newUuid, checkData: adminData, to: chatBoxActive, message: newMessage}
         
-        //socket.emit('adminSendMessage', dataEmit);
+        socket.emit('adminSendMessage', dataEmit);
         //Todo: we need to add a listener in the socket for the send-message from admin
 
         let dataStore = {

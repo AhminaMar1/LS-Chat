@@ -18,7 +18,7 @@ export const messagesFormat = (allMssg) => {
 }
 
 export const oneMessageFormat = (data) => {
-    
+
     let dataStore = {
         id: data.id,
         from: data.sender_id,
@@ -29,5 +29,5 @@ export const oneMessageFormat = (data) => {
         date: data.date
     }
 
-return dataStore;
+    return dataStore;
 }

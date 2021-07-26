@@ -21,17 +21,6 @@ export default function OnlineUsers() {
                     )
                 })}
 
-                <div className="online-item">
-                    <div className="online-icon"></div>
-                    John doe
-                </div>
-
-                <div className="online-item">
-                    <div className="online-icon"></div>
-                    John doe
-                </div>
-
-
             </div>
         </div>
     )

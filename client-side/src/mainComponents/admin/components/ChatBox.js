@@ -88,7 +88,7 @@ export default function ChatBox({socket}) {
             <div className="chat-container">
                 {messages.map((el) => 
                         <div key={el.id} className="chat-msg">
-                            <p className={el.from === 'me' ? 'chat-msg-user' : 'chat-msg-admin'}>
+                            <p className={el.from === chatBoxActive ? 'chat-msg-user' : 'chat-msg-admin'}>
                                 {el.mssg}
                             </p>
                         </div>

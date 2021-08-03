@@ -128,7 +128,7 @@ export default function Client() {
         
         let dataStore = {
             id: newUuid,
-            from: 'me',
+            from: myData.id,
             mssg: newMessage,
             sent: false,
             reach: false,
@@ -144,7 +144,7 @@ export default function Client() {
         <div className="chat-client-main-container">
             {(togleState)?
 
-            <ChatClient messages={messages} sendMessage={sendMessage} newMessage={newMessage} setNewMessage={setNewMessage} avatar={avatar} setToggleState={setToggleState}/>
+            <ChatClient myId={myData.id} messages={messages} sendMessage={sendMessage} newMessage={newMessage} setNewMessage={setNewMessage} avatar={avatar} setToggleState={setToggleState}/>
             :
             <ChatClientCloseCase avatar={avatar} setToggleState={setToggleState}/>
             }

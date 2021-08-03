@@ -1,11 +1,11 @@
 import React from 'react'
 
-export default function Messages({messages}) {
+export default function Messages({myId, messages}) {
     return (
 
         <div className="messages-group">
             { (messages.length >= 1) ? messages.map( (data) => {
-                return <div className={data.from === "me" ? 'me' : ''} key={data.id}>
+                return <div className={data.from === myId ? 'me' : ''} key={data.id}>
                     <div>
                         {(data.seen === true) ?
                             <i className="fas fa-check-double check-active"/>

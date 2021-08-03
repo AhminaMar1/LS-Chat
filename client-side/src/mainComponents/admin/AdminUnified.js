@@ -15,7 +15,7 @@ const API_URL = env.API_URL;
 export default function AdminUnified({windowWidth}) {
 
   //States
-  const [{adminData, tokenIsValid}, dispatch] = useAppState()
+  const [{adminData, tokenIsValid, chatBoxActive}, dispatch] = useAppState()
   const [socketOn, setSocketOn] = useState(false);
   const [socket, setSocket] = useState();
 
@@ -86,13 +86,27 @@ export default function AdminUnified({windowWidth}) {
         dispatch({type: 'removeOneOnlineUser', payload: data})
       });
 
-      socket.on('newMessage', (data) => {
-        dispatch({type: 'addOneMessageFromUser', payload: data});
+      socket.on('newMessageFromAdmin', (data) => {
+          dispatch({type: 'addOneMessageFromUser', payload: data});
       });
-
 
     }
   }, [socketOn, adminData, socket, dispatch]);
+  
+  useEffect(() => {   
+    if(socketOn && adminData && adminData.id && adminData.token){
+
+      socket.on('newMessage', (data) => {
+        if(data && data.sender_id === chatBoxActive){
+          dispatch({type: 'addOneMessageFromUser', payload: data});
+        }
+      });
+
+      return () => socket.off('newMessage');
+    }
+
+  }, [socketOn, socket, adminData, dispatch, chatBoxActive])
+
 
     return (
         <div>

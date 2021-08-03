@@ -99,7 +99,7 @@ io.on("connection", (socket) => {
                let now = new Date();
                let messageData = {
                   id: (validUuid) ? data.id : uuid(),
-                  sender_id: 'me',
+                  sender_id: checkData.id,
                   mssg: data.message,
                   date: now
                }
@@ -110,7 +110,7 @@ io.on("connection", (socket) => {
                io.to('ADMIN').emit('newMessage', messageData);
 
 
-               redisClient.rpush(checkData.id, [messageData.id, 'me', messageData.mssg, false, false, now], (err) => {
+               redisClient.rpush(checkData.id, [messageData.id, checkData.id, messageData.mssg, false, false, now], (err) => {
                   if (err) {
                      console.log(err);
                   }
@@ -145,7 +145,7 @@ io.on("connection", (socket) => {
 
                
                
-               io.to('ADMIN').emit('newMessage', messageData);
+               io.to('ADMIN').emit('newMessageFromAdmin', messageData);
                
                let socketList = 'sl_'+data.to; 
                redisClient.lrange(socketList, 0, -1, (err, allSockets) => {

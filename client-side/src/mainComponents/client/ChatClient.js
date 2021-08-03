@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import Messages from './Messages';
 
-export default function ChatClient({messages, sendMessage, newMessage, setNewMessage, avatar, setToggleState}) {
+export default function ChatClient({myId, messages, sendMessage, newMessage, setNewMessage, avatar, setToggleState}) {
 
     const [clickShift, setClickShift] = useState(false);
     const [allowChange, setAllowChange] = useState(true)
@@ -45,7 +45,7 @@ export default function ChatClient({messages, sendMessage, newMessage, setNewMes
                 </div>
                 <div onClick={()=>setToggleState(false)} className="toggle-when-click"></div>
             </div>
-            <Messages messages={messages} />
+            <Messages myId={myId} messages={messages} />
             <div className="input-group">
                 <div className="button-flex">
                     <button><i className="far fa-paper-plane" /></button>

@@ -82,6 +82,7 @@ io.on("connection", (socket) => {
    })
    
    socket.on("sendMessage", (data) => {
+      console.log('Dd', socket.id)
 
       let checkData = data.checkData;
 
@@ -103,7 +104,7 @@ io.on("connection", (socket) => {
                   date: now
                }
                
-               socket.emit("newMessage", {id: messageData.id});
+               socket.emit("newMessageFromMe", {id: messageData.id});
                
                //send to admins
                io.to('ADMIN').emit('newMessage', messageData);
@@ -149,9 +150,13 @@ io.on("connection", (socket) => {
                let socketList = 'sl_'+data.to; 
                redisClient.lrange(socketList, 0, -1, (err, allSockets) => {
 
-                  //Todo: we need to send to all these sockets (allSockets)
-                  //socket.emit("newMessage", messageData);
-                  
+                  //Send to all these sockets (allSockets)
+                  if(allSockets.length > 0) {
+                     allSockets.forEach(el => {
+                        io.to(el).emit("newMessage", messageData);
+                     });
+                  }
+
                })
 
 

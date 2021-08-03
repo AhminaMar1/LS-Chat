@@ -87,7 +87,7 @@ export default function Client() {
                 token: myData.token
             });
 
-            socket.on('newMessage', (data) => {
+            socket.on('newMessageFromMe', (data) => {
                 let id = data.id;
                 setMessages(ms => ms.map((el) => {
                     if (id === el.id){
@@ -95,6 +95,21 @@ export default function Client() {
                     }
                     return el;
                 }))
+
+            })
+
+            socket.on('newMessage', (data) => {
+                let dataStore = {
+                    id: data.id,
+                    from: 'admin',
+                    mssg: data.mssg,
+                    sent: false,
+                    reach: false,
+                    seen: false
+                }
+
+                setMessages(ms => [...ms, dataStore]);
+
 
             })
 

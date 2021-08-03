@@ -19,7 +19,10 @@ export default function AdminUnified({windowWidth}) {
   const [socketOn, setSocketOn] = useState(false);
   const [socket, setSocket] = useState();
 
-  
+  //Functions
+  const redirectToLoginPage = () => {
+    window.location.href = '/login';
+  }
   //Effects
   useEffect(() => {
     
@@ -37,11 +40,16 @@ export default function AdminUnified({windowWidth}) {
 
       axios.get(`${API_URL}/admin/firstget?admin_id=${adminData.id}&admin_token=${adminData.token}`)
       .then((data) => {
+        
+        if(data && data.data.token_is_true){
+          dispatch({type: 'addOnlineUsers', payload: data.data.onlines});
+          
+          //Todo: We need to add validation..
+          dispatch({type: 'tokenIsTrue'});
+        } else {
+          //dispatch({type: 'tokenIsFalse'});
+        }
 
-        dispatch({type: 'addOnlineUsers', payload: data.data.onlines});
-
-        //Todo: We need to add validation..
-        dispatch({type: 'tokenIsValid'});
         
       }).catch((err) => console.log(err));
     }
@@ -94,6 +102,8 @@ export default function AdminUnified({windowWidth}) {
               <NormalScreen socket={socket}/>
               :<SmallScreen socket={socket}/>}
             </div>
+            : tokenIsValid===false ?
+              redirectToLoginPage()
             : <Wait />}
         </div>
     )

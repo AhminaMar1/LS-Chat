@@ -4,8 +4,9 @@ const onlineUsersReducer = (state, action = {}) => {
     switch (type) {
       case 'addOnlineUsers': {
         
-        let obj = payload;
+        let obj = payload || [];
         let arr = [];
+
         Object.keys(obj).forEach(function(key) {
           arr.push({
             id: key,

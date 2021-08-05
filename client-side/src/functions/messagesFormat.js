@@ -17,15 +17,15 @@ export const messagesFormat = (allMssg) => {
     return mssgArr;
 }
 
-export const oneMessageFormat = (data) => {
+export const oneMessageFormat = (data, [sent = false, reach = false, seen = false]) => {
 
     let dataStore = {
         id: data.id,
         from: data.sender_id,
         mssg: data.mssg,
-        sent: true,
-        reach: true,
-        seen: false,
+        sent,
+        reach,
+        seen,
         date: data.date
     }
 

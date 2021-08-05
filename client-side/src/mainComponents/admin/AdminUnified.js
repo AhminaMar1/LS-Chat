@@ -87,8 +87,14 @@ export default function AdminUnified({windowWidth}) {
       });
 
       socket.on('newMessageFromAdmin', (data) => {
-          dispatch({type: 'addOneMessageFromUser', payload: data});
+          dispatch({type: 'addOneMessageFromAdmin', payload: data});
       });
+
+      return () => {
+        socket.off('newOnlineUser');
+        socket.off('newMessageFromAdmin');
+        socket.off('RemoveFromOnlineUsers');
+    }
 
     }
   }, [socketOn, adminData, socket, dispatch]);
@@ -98,6 +104,7 @@ export default function AdminUnified({windowWidth}) {
 
       socket.on('newMessage', (data) => {
         if(data && data.sender_id === chatBoxActive){
+          //TODO: Send a socket emit for #the reach#
           dispatch({type: 'addOneMessageFromUser', payload: data});
         }
       });

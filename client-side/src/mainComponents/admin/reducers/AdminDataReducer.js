@@ -4,7 +4,6 @@ const adminDataReducer = (state, action = {}) => {
     switch (type) {
       case 'addAdminData': {
         return {
-          ...state,
           adminData: {id: payload.id, token: payload.token},
         }
       }

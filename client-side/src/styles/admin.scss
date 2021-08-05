@@ -1,5 +1,6 @@
 /*ROOT*/
 @import url('https://fonts.googleapis.com/css2?family=Baloo+Tammudu+2&display=swap');
+$active-chat: #82bdd8;
 
 
 /*
@@ -257,25 +258,44 @@ input:focus{
 }
 
 .chat-msg{
+    margin-top: -20px;
+    div {
+        width: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #aaa;
+        font-size: 12px;
+        i{
+            color: #aaa;
+        }
+        .check-active{
+            color: $active-chat;
+        }
+    }
     p{
+        max-width: 70%;
         padding: 15px 25px 8px 25px;
         border-radius: 25px;
-        max-width: 70%;
-        margin-top: 0;
         font-size: 15px;
     }
 }
 
-
 .chat-msg-admin{
-    background-color: #548FA9;
-    color: #fff;
-    margin-left: auto;
+    direction: rtl;
+    p{
+        background-color: #548FA9;
+        color: #fff;
+        margin-left: auto;
+        direction: ltr;
+    }
 }
 
 .chat-msg-user{
-    background-color: #eee;
-    color: #333;
+    p{
+        background-color: #eee;
+        color: #333;
+    }
     
 }
 

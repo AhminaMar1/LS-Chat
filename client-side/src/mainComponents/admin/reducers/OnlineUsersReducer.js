@@ -15,7 +15,6 @@ const onlineUsersReducer = (state, action = {}) => {
         });
 
         return {
-          ...state,
           onlineUsers: arr,
         }
       }
@@ -33,7 +32,6 @@ const onlineUsersReducer = (state, action = {}) => {
         }
 
         return {
-          ...state,
           onlineUsers: list,
         }
       }
@@ -44,7 +42,6 @@ const onlineUsersReducer = (state, action = {}) => {
         
         list = list.filter(el => el.id !== data.id)
         return {
-          ...state,
           onlineUsers: list,
         }
       }

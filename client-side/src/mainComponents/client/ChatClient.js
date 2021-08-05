@@ -1,31 +1,8 @@
-import React, {useState} from 'react'
+import React from 'react'
 import Messages from './Messages';
+import SendMessage from './SendMessage';
 
-export default function ChatClient({myId, messages, sendMessage, newMessage, setNewMessage, avatar, setToggleState}) {
-
-    const [clickShift, setClickShift] = useState(false);
-    const [allowChange, setAllowChange] = useState(true)
-    const handleChange = (e) => {
-        if(allowChange){
-            setNewMessage(e.target.value);
-        }else{
-            setAllowChange(true);
-        }
-    }
-
-    const handleKeyDown = (e) => {
-        if (!clickShift && e.keyCode === 16) { //shift
-            setClickShift(true);
-        } else if (!clickShift && e.keyCode === 13) {
-            if(newMessage!==''){
-                sendMessage();
-            }
-            setAllowChange(false);
-        } else if (clickShift) {
-            setClickShift(false);
-        }
-    
-    }
+export default function ChatClient({myId, messages, sendMessage, avatar, setToggleState}) {
 
     return (
         <div className="chat-client">
@@ -46,12 +23,8 @@ export default function ChatClient({myId, messages, sendMessage, newMessage, set
                 <div onClick={()=>setToggleState(false)} className="toggle-when-click"></div>
             </div>
             <Messages myId={myId} messages={messages} />
-            <div className="input-group">
-                <div className="button-flex">
-                    <button><i className="far fa-paper-plane" /></button>
-                </div>
-                <textarea name="message" value={newMessage} onKeyDown={handleKeyDown} onChange={(e) => handleChange(e)}></textarea>
-            </div>
+            <SendMessage sendMessage={sendMessage}/>
+
         </div>
     )
 }

@@ -3,7 +3,6 @@ const chatBoxActiveReducer = (state, action = {}) => {
     switch (type) {
       case 'chatBoxActive': {
         return {
-          ...state,
           chatBoxActive: payload,
         }
       }

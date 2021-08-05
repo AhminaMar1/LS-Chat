@@ -1,6 +1,14 @@
-import React from 'react'
+import React, {useEffect, useRef} from 'react'
 
 export default function Messages({myId, messages}) {
+    //Ref
+    const refForScrolling = useRef(null);
+
+    //Effects
+    useEffect(() => {
+        refForScrolling.current.scrollIntoView();
+    }, [messages]);
+
     return (
 
         <div className="messages-group">
@@ -21,6 +29,7 @@ export default function Messages({myId, messages}) {
                     </p>
                     </div>
             }) : ''}
+            <div ref={refForScrolling}></div>
         </div>
     )
 }

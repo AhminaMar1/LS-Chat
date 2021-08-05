@@ -3,14 +3,12 @@ const tokenIsValidReducer = (state, action = {}) => {
     switch (type) {
       case 'tokenIsTrue': {
         return {
-          ...state,
-          tokenIsValid: true,
+          tokenIsValid: true
         }
       }
       case 'tokenIsFalse': {
         return {
-          ...state,
-          tokenIsValid: false,
+          tokenIsValid: false
         }
       }
       default:

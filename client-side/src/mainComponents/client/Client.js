@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useCallback} from 'react'
 import socketIOClient from "socket.io-client";
 import env from "react-dotenv";
 import '../../styles/client.scss';
@@ -7,7 +7,7 @@ import ChatClient from './ChatClient';
 import ChatClientCloseCase from './ChatClientCloseCase';
 import axios from 'axios';
 import { v4 as uuid } from 'uuid';
-import {messagesFormat} from '../../functions/messagesFormat';
+import {oneMessageFormat, messagesFormat} from '../../functions/messagesFormat';
 
 
 const ENDPOINT = env.END_POINT;
@@ -21,9 +21,9 @@ export default function Client() {
     const [myData, setMyData] = useState({id: false, token:false});
 
     const [messages, setMessages] = useState([]);
-    const [newMessage, setNewMessage] = useState('');
 
     const [socket, setSocket] = useState();
+    const [socketOn, setSocketOn] = useState(false);
 
     //Effects
     useEffect(() => {
@@ -62,16 +62,18 @@ export default function Client() {
         });
 
         setSocket(socket);
+        setSocketOn(true);
+
     }, [])
 
-      //First GET
+    //First GET
     useEffect(() => {
         if(myData && myData.id && myData.token){
             axios.get(`${API_URL}/client/lastchatdoc?id=${myData.id}&token=${myData.token}`)
             .then((data) => {
+                //TODO: Send a socket emit for #the reach#
 
-                let mssgArr = messagesFormat(data.data || []);
-
+                let mssgArr = messagesFormat(data.data || {});
                 setMessages(mssgArr)
             
         }).catch((err) => console.log(err));
@@ -81,7 +83,7 @@ export default function Client() {
 
     //Add same listeners and new redis session SOCKETS
     useEffect(() => {
-        if(myData.id){
+        if(socketOn && myData.id){
             socket.emit('newRedisSession', {
                 user_id: myData.id,
                 token: myData.token
@@ -89,62 +91,71 @@ export default function Client() {
 
             socket.on('newMessageFromMe', (data) => {
                 let id = data.id;
-                setMessages(ms => ms.map((el) => {
-                    if (id === el.id){
-                        el.sent = true;
+                setMessages(ms => {
+
+                    let existe = ms.some(el => el.id === id);
+                    if (existe) {
+                        return ms.map((el) => {
+    
+                            if (id === el.id){
+                                el.sent = true;
+                            }
+                            return el;
+                        })
+                    } else {
+
+                        let dataStore = oneMessageFormat(data, [true, false, false]);
+
+                        return [...ms, dataStore]
                     }
-                    return el;
-                }))
+                });
 
             })
 
             socket.on('newMessage', (data) => {
-                let dataStore = {
-                    id: data.id,
-                    from: 'admin',
-                    mssg: data.mssg,
-                    sent: false,
-                    reach: false,
-                    seen: false
-                }
-
+                //TODO: Send a socket emit for #the reach#
+                let dataStore = oneMessageFormat(data, [true, true, false]);
                 setMessages(ms => [...ms, dataStore]);
-
 
             })
 
+            return () => {
+                socket.off('newMessage');
+                socket.off('newMessageFromMe');
+            }
+
         }
 
-    }, [myData, socket])
+    }, [myData, socket, socketOn])
 
     //Functions
 
-    const sendMessage = () => {
-        
+    const sendMessage = useCallback((newMessage) => {
         let newUuid = uuid();
         let dataEmit = {id: newUuid, checkData: myData, message: newMessage}
         
         socket.emit('sendMessage', dataEmit);
         
-        let dataStore = {
+        let now = new Date();
+        let data = {
             id: newUuid,
-            from: myData.id,
+            sender_id: myData.id,
             mssg: newMessage,
-            sent: false,
-            reach: false,
-            seen: false
+            date: now
         }
+        let dataStore = oneMessageFormat(data, [false, false, false]);
         setMessages(ms => [...ms, dataStore])
-        
-        setNewMessage('');
-    }
+
+    }, [myData, socket]);
 
 
     return (
         <div className="chat-client-main-container">
-            {(togleState)?
-
-            <ChatClient myId={myData.id} messages={messages} sendMessage={sendMessage} newMessage={newMessage} setNewMessage={setNewMessage} avatar={avatar} setToggleState={setToggleState}/>
+            
+            {
+            (myData.id === false) ? '' :
+            (togleState) ?
+            <ChatClient myId={myData.id} messages={messages} sendMessage={sendMessage} avatar={avatar} setToggleState={setToggleState}/>
             :
             <ChatClientCloseCase avatar={avatar} setToggleState={setToggleState}/>
             }

@@ -7,6 +7,8 @@ const redis = require('redis');
 const redisClient = redis.createClient();
 const { v4: uuid, validate: uuidValidate } = require('uuid');
 
+
+
 //The env
 require('dotenv').config()
 const port = process.env.SOCKET_PORT || 6000;
@@ -48,9 +50,13 @@ const io = socketIo(server, {
 });
 
 //Functons
-const checkUser = require('./src/functions/checkUser')
+const {storageForCheking} = require('./src/functions/storageForCheckingUser');
+const {checkTokenOfUser} = require('./src/functions/checkTokenUser');
+const {messageFormat, formatSroreInRedis} = require('./src/functions/messageFormat');
+const {sendToAllSocketOfOneClient} = require('./src/functions/sendToAllSocketOfOneClient');
 
 
+// IO
 io.on("connection", (socket) => {
    console.log("New client connected");
 
@@ -78,55 +84,39 @@ io.on("connection", (socket) => {
    //Save a new session in redis when the user is connet
 
    socket.on('newRedisSession', (data) => {
-      checkUser.storageForCheking(data, redisClient, socket.id, io);
+      storageForCheking(data, redisClient, socket.id, io);
    })
    
    socket.on("sendMessage", (data) => {
 
       let checkData = data.checkData;
 
-      let validUuid = uuidValidate(data.id);
-
-      redisClient.hgetall(socket.id, (err, redisBackData) => {
+      checkTokenOfUser({id: socket.id, checkData, redisClient}, () => {
+         //the callback if the token is true
          
-         if (err){
-            console.err(err)
-         } else {
-            //Checking token
-            if(redisBackData && redisBackData.user_id == checkData.id && redisBackData.token == checkData.token) {
-               
-               let now = new Date();
-               let messageData = {
-                  id: (validUuid) ? data.id : uuid(),
-                  sender_id: checkData.id,
-                  mssg: data.message,
-                  date: now
-               }
-            
-               
-               let socketList = 'sl_'+checkData.id; 
-               redisClient.lrange(socketList, 0, -1, (err, allSockets) => {
-                  //Send to all these sockets (allSockets)
-                  if(allSockets.length > 0) {
-                     allSockets.forEach(el => {
-                        io.to(el).emit("newMessageFromMe", messageData);
-                     });
-                  }
-               })
+         let [messageData, now] = messageFormat({
+            id: data.id,
+            message: data.message,
+            sender: checkData.id
+         });
+      
+         sendToAllSocketOfOneClient(checkData.id, redisClient, io, {type: 'newMessageFromMe', data: messageData});
 
-               //send to admins
-               io.to('ADMIN').emit('newMessage', messageData);
+         //send to admins
+         io.to('ADMIN').emit('newMessage', messageData);
+   
+         let formatRedis = formatSroreInRedis({id: messageData.id, sender: checkData.id, message: messageData.mssg, now: now})
 
-
-               redisClient.rpush(checkData.id, [messageData.id, checkData.id, messageData.mssg, false, false, now], (err) => {
-                  if (err) {
-                     console.log(err);
-                  }
-               })
-
+         redisClient.rpush(checkData.id, formatRedis, (err) => {
+            if (err) {
+               console.log(err);
             }
-         }
+         })
+
       })
+
+
+            
    });
 
    socket.on("adminSendMessage", (data) => {
@@ -139,36 +129,20 @@ io.on("connection", (socket) => {
             if (err) {
                console.log(err);
             } else if(token && token === checkData.token) {
-               //Succes
-               
-               let validUuid = uuidValidate(data.id);
-               let now = new Date();
-               let messageData = {
-                  id: (validUuid) ? data.id : uuid(),
-                  sender_id: 'admin',
-                  mssg: data.message,
-                  date: now
-               }
-
-
-               
+               //Succes               
+               let [messageData, now] = messageFormat({
+                  id: data.id,
+                  message: data.message,
+                  sender: 'admin',
+               });
                
                io.to('ADMIN').emit('newMessageFromAdmin', messageData);
-               
-               let socketList = 'sl_'+data.to; 
-               redisClient.lrange(socketList, 0, -1, (err, allSockets) => {
+              
+               sendToAllSocketOfOneClient(data.to, redisClient, io, {type: 'newMessage', data: messageData});
 
-                  //Send to all these sockets (allSockets)
-                  if(allSockets.length > 0) {
-                     allSockets.forEach(el => {
-                        io.to(el).emit("newMessage", messageData);
-                     });
-                  }
+               let formatRedis = formatSroreInRedis({id: messageData.id, sender: 'admin', message: messageData.mssg, now: now})
 
-               })
-
-
-               redisClient.rpush(data.to, [messageData.id, 'admin', messageData.mssg, false, false, now], (err) => {
+               redisClient.rpush(data.to, formatRedis, (err) => {
                   if (err) {
                      console.log(err);
                   }
@@ -181,7 +155,9 @@ io.on("connection", (socket) => {
 
       }
    });
-   
+
+
+
 
    
    socket.on("disconnect", () => {

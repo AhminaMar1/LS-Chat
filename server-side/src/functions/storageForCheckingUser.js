@@ -1,5 +1,5 @@
 
-exports.storageForCheking = async (data, redisClient, socketId, io) => {
+exports.storageForCheking = (data, redisClient, socketId, io) => {
     const User = require('../models/user');
     User.findById(data.user_id, (err, user) => {
         if (err || !user || !data.token || data.token !== user.token) {

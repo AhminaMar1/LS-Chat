@@ -1,23 +1,22 @@
 const { v4: uuid, validate: uuidValidate } = require('uuid');
 
-exports.messageFormat = ({id, message, sender}) => {
+exports.messageFormat = ({id, message, sender, date}) => {
     
     let validUuid = uuidValidate(id);
-    let now = new Date();
 
     let messageFormat = {
         id: (validUuid) ? id : uuid(),
         sender_id: sender,
         mssg: message,
-        date: now
+        date
     }
 
-    return [messageFormat, now];
+    return messageFormat;
 }
 
-exports.formatSroreInRedis = ({id, sender, message, now}) => {
+exports.formatSroreInRedis = ({id, sender, message, date}) => {
     
-    let arr = [id, sender, message, false, false, now];
+    let arr = [id, sender, message, false, false, date];
 
     return arr;
 

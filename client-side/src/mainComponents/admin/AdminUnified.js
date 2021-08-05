@@ -74,8 +74,8 @@ export default function AdminUnified({windowWidth}) {
     if(socketOn && adminData && adminData.id && adminData.token){
       
       socket.emit('ImAdmin', {
-        admin_id: adminData.id,
-        admin_token: adminData.token
+        id: adminData.id,
+        token: adminData.token
       });
 
       socket.on("newOnlineUser", data => {

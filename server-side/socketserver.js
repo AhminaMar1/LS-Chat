@@ -5,8 +5,6 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const redis = require('redis');
 const redisClient = redis.createClient();
-const { v4: uuid, validate: uuidValidate } = require('uuid');
-
 
 
 //The env
@@ -51,7 +49,7 @@ const io = socketIo(server, {
 
 //Functons
 const {storageForCheking} = require('./src/functions/storageForCheckingUser');
-const {checkTokenOfUser} = require('./src/functions/checkTokenUser');
+const {userAuth, adminAuth} = require('./src/functions/authForSocket');
 const {messageFormat, formatSroreInRedis} = require('./src/functions/messageFormat');
 const {sendToAllSocketOfOneClient} = require('./src/functions/sendToAllSocketOfOneClient');
 
@@ -65,19 +63,9 @@ io.on("connection", (socket) => {
    //Join a new admin - ADMIN room
 
    socket.on('ImAdmin', (data) => {
-
-      console.log('Ccccccccccc')
-
-      if(data && data.admin_id){
-         let queryGetAdmin = 'ADMIN:'+data.admin_id;
-         redisClient.get(queryGetAdmin, (err, dataRedis) => {
-            if(err) {
-
-            } else if (dataRedis && dataRedis === data.admin_token){
-               socket.join('ADMIN');
-            }
-         })
-      }
+      adminAuth({checkData: data, redisClient}, () => {
+         socket.join('ADMIN');
+      })
 
    });
 
@@ -91,13 +79,14 @@ io.on("connection", (socket) => {
 
       let checkData = data.checkData;
 
-      checkTokenOfUser({id: socket.id, checkData, redisClient}, () => {
+      userAuth({id: socket.id, checkData, redisClient}, () => {
          //the callback if the token is true
-         
-         let [messageData, now] = messageFormat({
+         let now = new Date();
+         let messageData = messageFormat({
             id: data.id,
             message: data.message,
-            sender: checkData.id
+            sender: checkData.id,
+            now: now
          });
       
          sendToAllSocketOfOneClient(checkData.id, redisClient, io, {type: 'newMessageFromMe', data: messageData});
@@ -122,41 +111,35 @@ io.on("connection", (socket) => {
    socket.on("adminSendMessage", (data) => {
       let checkData = data.checkData;
 
-      
       if(checkData) {
-         let adminQuery = 'ADMIN:'+checkData.id;
-         redisClient.get(adminQuery, (err, token) => {
-            if (err) {
-               console.log(err);
-            } else if(token && token === checkData.token) {
-               //Succes               
-               let [messageData, now] = messageFormat({
-                  id: data.id,
-                  message: data.message,
-                  sender: 'admin',
-               });
-               
-               io.to('ADMIN').emit('newMessageFromAdmin', messageData);
-              
-               sendToAllSocketOfOneClient(data.to, redisClient, io, {type: 'newMessage', data: messageData});
 
-               let formatRedis = formatSroreInRedis({id: messageData.id, sender: 'admin', message: messageData.mssg, now: now})
+         adminAuth({checkData, redisClient}, () => {
+            //Callback function
+            let now = new Date();
+            let messageData = messageFormat({
+               id: data.id,
+               message: data.message,
+               sender: 'admin',
+               date: now
+            });
+            
+            io.to('ADMIN').emit('newMessageFromAdmin', messageData);
+            
+            sendToAllSocketOfOneClient(data.to, redisClient, io, {type: 'newMessage', data: messageData});
 
-               redisClient.rpush(data.to, formatRedis, (err) => {
-                  if (err) {
-                     console.log(err);
-                  }
-               })
+            let formatRedis = formatSroreInRedis({id: messageData.id, sender: 'admin', message: messageData.mssg, date: now})
 
-            }else{
-               console.log('The token admin is wrong');
-            }
-         });
+            redisClient.rpush(data.to, formatRedis, (err) => {
+               if (err) {
+                  console.log(err);
+               }
+            })
+
+         })     
+
 
       }
    });
-
-
 
 
    
@@ -194,8 +177,6 @@ io.on("connection", (socket) => {
       });
 
       //The the user is an admin
-
-
 
 
    });

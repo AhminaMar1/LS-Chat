@@ -54,7 +54,7 @@ exports.prevChatDoc = (req, res) => {
     
 }
 
-const clientFunctions = require('../functions/client');
+const clientFunctions = require('../functions/saveInMongoForClient');
 
 exports.startSession = async (req, res) => {
     

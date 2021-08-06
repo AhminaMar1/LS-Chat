@@ -122,8 +122,23 @@ export default function Client() {
 
             })
 
+            socket.on('reachedAndSeen', (data) => {
+                setMessages((ms) => ms.map(el => {
+
+                    if(el.id === data.id) {
+                        el.reach = data.reached;
+                        el.seen = data.seen;
+                    }
+
+                    return el;
+
+                }))
+            });
+            
+
             return () => {
                 socket.off('newMessage');
+                socket.off('reachedAndSeen');
                 socket.off('newMessageFromMe');
             }
 

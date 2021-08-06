@@ -154,6 +154,15 @@ io.on("connection", (socket) => {
 
    });
 
+   socket.on("reachedToAdmin", (data) => {
+      adminAuth({checkData: data.checkData, redisClient}, () => {
+         let reachedId = data.reached_id;
+         let userId = data.user_id;
+         
+         reached(userId, reachedId, redisClient, {io, type: 'client'});
+
+      });
+   });
 
    
    socket.on("disconnect", () => {

@@ -87,7 +87,7 @@ export default function AdminUnified({windowWidth}) {
       });
 
       socket.on('newMessageFromAdmin', (data) => {
-          dispatch({type: 'addOneMessageFromAdmin', payload: data});
+        dispatch({type: 'addOneMessageFromAdmin', payload: data});
       });
 
       socket.on('reachedAndSeen', (data) => {
@@ -108,7 +108,10 @@ export default function AdminUnified({windowWidth}) {
 
       socket.on('newMessage', (data) => {
         if(data && data.sender_id === chatBoxActive){
-          //TODO: Send a socket emit for #the reach#
+
+          let dataEmit = {reached_id: data.id, user_id: data.sender_id, one_message: true, checkData: adminData}
+          socket.emit('reachedToAdmin', dataEmit);
+
           dispatch({type: 'addOneMessageFromUser', payload: data});
         }
       });

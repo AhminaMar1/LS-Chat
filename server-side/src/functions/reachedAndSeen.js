@@ -1,3 +1,5 @@
+const {sendToAllSocketOfOneClient} = require('../functions/sendToAllSocketOfOneClient')
+
 const awaitCheckAndChange = async (reachedOrseen, index, userId, reachedId, redisClient, {io, type}) => {
     
     //index of the boolean that we need to change it.
@@ -8,23 +10,31 @@ const awaitCheckAndChange = async (reachedOrseen, index, userId, reachedId, redi
     let eIndex = index - 1;
 
     await redisClient.lrange(userId, sIndex, eIndex, (err, data) => {
-
+        
         if(err) {
             console.log(err);
         } else if(data && data.length>2) {
-            if(data[0] === reachedId && data[1] !== userId) {
+            if(data[0] === reachedId && ( data[1] !== userId || (data[1] === userId && type !== 'ADMINROOM'))) {
                 if(data[reachedOrseenIndex] == 'false'){
                     
                     redisClient.lset(userId, sIndex+reachedOrseenIndex, true, (err) => {
                         if (!err) {
+                            let dataEmit = {
+                                id: reachedId,
+                                reached : true,
+                                seen: false,
+                            }
                             //To admin room
-                            if(type === 'ADMINROOM') {
-                                let dataEmit = {
-                                    id: reachedId,
-                                    reached : true,
-                                    seen: false,
-                                }
+                            if(type === 'ADMINROOM') {                                
                                 io.to('ADMIN').emit('reachedAndSeen', dataEmit);
+                            } else { //To all socket of on client
+                                sendToAllSocketOfOneClient(userId, redisClient, io, 
+                                    {
+                                        type: 'reachedAndSeen',
+                                        data: dataEmit
+                                    }
+                                )
+                                
                             }
                             
                         }
@@ -50,7 +60,7 @@ const reachedAndSeen = (reachedOrseen, userId, reachedId, redisClient, {io, type
             console.log(err);
         } else {
             let index = num;
-            
+
             //To await when looping
             (async() => {
                 let repeat = true;

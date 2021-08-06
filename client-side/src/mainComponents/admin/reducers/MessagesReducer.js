@@ -37,6 +37,20 @@ const messagesReducer = (state, action = {}) => {
         }
 
       }
+      case 'reachedAndSeenDispatch': {
+        return {
+          messages: state.messages.map(el => {
+
+            if(el.id === payload.id) {
+              el.reach = payload.reached;
+              el.seen = payload.see;
+            }
+            return el;
+          })
+        }
+
+      }
+      
       default:
         return state
     }

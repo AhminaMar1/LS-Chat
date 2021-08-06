@@ -90,6 +90,10 @@ export default function AdminUnified({windowWidth}) {
           dispatch({type: 'addOneMessageFromAdmin', payload: data});
       });
 
+      socket.on('reachedAndSeen', (data) => {
+        dispatch({type: 'reachedAndSeenDispatch', payload: data});
+      });
+
       return () => {
         socket.off('newOnlineUser');
         socket.off('newMessageFromAdmin');

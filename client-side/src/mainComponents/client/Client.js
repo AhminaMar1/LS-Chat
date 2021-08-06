@@ -114,8 +114,8 @@ export default function Client() {
 
             socket.on('newMessage', (data) => {
 
-                let dataEmit = {id: data.id, one_message: true, checkData: myData}
-                socket.emit('messageReached', dataEmit);
+                let dataEmit = {reached_id: data.id, one_message: true, checkData: myData}
+                socket.emit('reachedToUser', dataEmit);
 
                 let dataStore = oneMessageFormat(data, [true, true, false]);
                 setMessages(ms => [...ms, dataStore]);

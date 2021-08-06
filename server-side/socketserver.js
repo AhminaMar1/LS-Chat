@@ -52,7 +52,7 @@ const {storageForCheking} = require('./src/functions/storageForCheckingUser');
 const {userAuth, adminAuth} = require('./src/functions/authForSocket');
 const {messageFormat, formatSroreInRedis} = require('./src/functions/messageFormat');
 const {sendToAllSocketOfOneClient} = require('./src/functions/sendToAllSocketOfOneClient');
-
+const {reached} = require('./src/functions/reachedAndSeen')
 
 // IO
 io.on("connection", (socket) => {
@@ -139,6 +139,19 @@ io.on("connection", (socket) => {
 
 
       }
+   });
+
+   socket.on("reachedToUser", (data) => {
+      let checkData = data.checkData;
+
+      userAuth({id: socket.id, checkData, redisClient}, () => {
+
+         let reachedId = data.reached_id;
+         
+         reached(checkData.id, reachedId, redisClient, {io, type: 'ADMINROOM'});
+
+      });
+
    });
 
 

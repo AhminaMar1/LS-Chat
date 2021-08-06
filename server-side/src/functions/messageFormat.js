@@ -14,7 +14,7 @@ exports.messageFormat = ({id, message, sender, date}) => {
     return messageFormat;
 }
 
-exports.formatSroreInRedis = ({id, sender, message, date}) => {
+exports.formatSroreInRedis = ({id, sender, message, date = 'no-date'}) => {
     
     let arr = [id, sender, message, false, false, date];
 

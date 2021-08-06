@@ -94,7 +94,7 @@ io.on("connection", (socket) => {
          //send to admins
          io.to('ADMIN').emit('newMessage', messageData);
    
-         let formatRedis = formatSroreInRedis({id: messageData.id, sender: checkData.id, message: messageData.mssg, now: now})
+         let formatRedis = formatSroreInRedis({id: messageData.id, sender: checkData.id, message: messageData.mssg, date: now})
 
          redisClient.rpush(checkData.id, formatRedis, (err) => {
             if (err) {

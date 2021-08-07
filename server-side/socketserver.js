@@ -176,6 +176,18 @@ io.on("connection", (socket) => {
       });
 
    });
+
+   socket.on("seenFromAdmin", (data) => {
+      console.log(data.checkData);
+      adminAuth({checkData: data.checkData, redisClient}, () => {
+         let seenId = data.seen_id[0];
+         let userId = data.user_id;
+         console.log(data)
+         
+         seen(userId, seenId, redisClient, {io, type: 'client'});
+
+      });
+   });
    
    socket.on("disconnect", () => {
 

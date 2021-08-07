@@ -2,6 +2,8 @@ const initialState = {
     adminData: { id: false, token: false },
     tokenIsValid: null,
     chatBoxActive: false,
+    focus: false,
+    allSeen: false,
     onlineUsers: [],
     messages: []
   }

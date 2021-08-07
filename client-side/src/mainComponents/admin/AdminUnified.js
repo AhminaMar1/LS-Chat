@@ -113,6 +113,7 @@ export default function AdminUnified({windowWidth}) {
           socket.emit('reachedToAdmin', dataEmit);
 
           dispatch({type: 'addOneMessageFromUser', payload: data});
+          dispatch({type: 'allSeenFalse'});
         }
       });
 

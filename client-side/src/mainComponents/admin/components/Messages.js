@@ -2,14 +2,15 @@ import React, {useEffect, useRef} from 'react'
 import { useAppState } from '../reducers/AppState';
 import env from "react-dotenv";
 import axios from 'axios';
+import {returnNotSeen} from '../../../functions/seenFunction'
 
 const API_URL = env.API_URL;
 
-export default function Messages() {
+export default function Messages({socket}) {
     //Ref
     const refForScrolling = useRef(null);
     //States
-    const [{adminData, chatBoxActive, messages}, dispath] = useAppState();
+    const [{adminData, chatBoxActive, messages, focus, allSeen}, dispatch] = useAppState();
 
     //Effects
     useEffect(() => {
@@ -17,16 +18,27 @@ export default function Messages() {
             axios.get(`${API_URL}/client/lastchatdoc?admin=yes&admin_id=${adminData.id}&admin_token=${adminData.token}&id_user=${chatBoxActive}`)
                 .then((data) => {
                     //TODO: Send a socket emit for #the reach#
-                    dispath({type: 'addMessages', payload: data.data});    
+                    dispatch({type: 'addMessages', payload: data.data});    
                 }
                 ).catch((err) => console.log(err));
         }
-    }, [chatBoxActive, adminData, dispath])
+    }, [chatBoxActive, adminData, dispatch])
 
 
     useEffect(() => {
         refForScrolling.current.scrollIntoView();
-    }, [messages])
+    }, [messages]);
+
+    useEffect(() => {
+        if(!allSeen && focus && adminData.id && socket && chatBoxActive) {
+            let dataEmit = returnNotSeen(messages, adminData, chatBoxActive);
+            if (dataEmit) {
+                socket.emit('seenFromAdmin', dataEmit);
+            }
+
+            dispatch({type: 'allSeenTrue'});
+        }
+    }, [allSeen, focus, messages, socket, adminData, dispatch, chatBoxActive]);
     
     return (
         <>

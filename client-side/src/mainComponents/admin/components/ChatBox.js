@@ -10,7 +10,7 @@ export default function ChatBox({socket}) {
     return (
         <div className="flex-chat-box" id="chat-display">
             <div className="chat-container">
-                <Messages />
+                <Messages socket={socket} />
                 <SendMessage socket={socket}/>
             </div>
             

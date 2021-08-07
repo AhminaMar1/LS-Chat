@@ -1,8 +1,11 @@
-import React, {useState} from 'react'
+import React, {useState, useLayoutEffect, useCallback, useRef} from 'react'
 import { useAppState } from '../reducers/AppState';
 import { v4 as uuid } from 'uuid';
 
 export default function SendMessage({socket}) {
+
+    const refInput = useRef(null);
+
     //States
     const [{adminData, chatBoxActive}, dispatch] = useAppState();
 
@@ -59,6 +62,34 @@ export default function SendMessage({socket}) {
         }
     
     }
+
+    //
+    const switchFocusToTrue = useCallback( ()=> {
+        dispatch({type:'switchFocus' ,payload: true})
+    }, [dispatch])
+
+    const switchFocusToFalse = useCallback( ()=> {
+        dispatch({type:'switchFocus' ,payload: false})
+    }, [dispatch])
+
+    useLayoutEffect (() => {
+
+
+        refInput.current.addEventListener('focusin', switchFocusToTrue);
+
+        refInput.current.addEventListener('focusout', switchFocusToFalse);
+        
+        //To debugging an eslint err
+        let checkRefCurrent = null;
+        if (refInput.current) {
+            checkRefCurrent = refInput.current;
+        }
+
+        return () => {
+            checkRefCurrent.removeEventListener('focusin', switchFocusToTrue)
+            checkRefCurrent.addEventListener('focusout', switchFocusToFalse);
+        }
+    }, [switchFocusToTrue, switchFocusToFalse]);
     
     return (
         <form onSubmit={submitMessage}>
@@ -67,7 +98,7 @@ export default function SendMessage({socket}) {
                     <div className="button-group">
                         <button>Send</button>
                     </div>
-                    <textarea onKeyDown={handleKeyDown} onChange={handleChange} value={newMessage} type="text"></textarea>
+                    <textarea ref={refInput} onKeyDown={handleKeyDown} onChange={handleChange} value={newMessage} type="text"></textarea>
                 </div>
             </div>
         </form>

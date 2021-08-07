@@ -43,7 +43,7 @@ const messagesReducer = (state, action = {}) => {
 
             if(el.id === payload.id) {
               el.reach = payload.reached;
-              el.seen = payload.see;
+              el.seen = payload.seen;
             }
             return el;
           })

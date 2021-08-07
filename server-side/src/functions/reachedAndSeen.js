@@ -22,7 +22,7 @@ const awaitCheckAndChange = async (reachedOrseen, index, userId, reachedId, redi
                             let dataEmit = {
                                 id: reachedId,
                                 reached : true,
-                                seen: false,
+                                seen: (reachedOrseen==='seen') ? true : false,
                             }
                             //To admin room
                             if(type === 'ADMINROOM') {                                
@@ -82,7 +82,6 @@ exports.reached = (userId, reachedId, redisClient, {io, type}) => {
     reachedAndSeen('reched', userId, reachedId, redisClient, {io, type});
 };
 
-exports.seen = () => {
-
-
+exports.seen = (userId, seenId, redisClient, {io, type}) => {
+    reachedAndSeen('seen', userId, seenId, redisClient, {io, type});
 };

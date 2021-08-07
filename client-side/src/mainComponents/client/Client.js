@@ -24,6 +24,8 @@ export default function Client() {
 
     const [socket, setSocket] = useState();
     const [socketOn, setSocketOn] = useState(false);
+    const [focus, setFocus] = useState(false);
+    const [allSeen, setAllSeen] = useState(false);
 
     //Effects
     useEffect(() => {
@@ -119,6 +121,7 @@ export default function Client() {
 
                 let dataStore = oneMessageFormat(data, [true, true, false]);
                 setMessages(ms => [...ms, dataStore]);
+                setAllSeen(false)
 
             })
 
@@ -146,6 +149,33 @@ export default function Client() {
 
     }, [myData, socket, socketOn])
 
+    useEffect(() => {
+        if(!allSeen && focus && socketOn) {
+            let needToSeenArr = [];
+            for(let i=messages.length-1, finish = false; i>=0 && finish === false; i--) {
+
+                let el = messages[i];
+                if(el.from !== myData.id && el.seen === false) {
+                    needToSeenArr.push(el.id);
+                } else if (el.from !== myData.id && el.seen === true) {
+                    finish = true;
+                }
+
+            }
+
+            if(needToSeenArr.length > 0) {
+                let dataEmit = {
+                    seen_id: needToSeenArr,
+                    one_message: needToSeenArr.length === 1 ? true : false,
+                    checkData: myData
+                }
+                socket.emit('seenFromUser', dataEmit);
+            }
+            
+            setAllSeen(true);
+        }
+    }, [allSeen, focus, messages, socket, socketOn, myData]);
+    
     //Functions
 
     const sendMessage = useCallback((newMessage) => {
@@ -173,7 +203,7 @@ export default function Client() {
             {
             (myData.id === false) ? '' :
             (togleState) ?
-            <ChatClient myId={myData.id} messages={messages} sendMessage={sendMessage} avatar={avatar} setToggleState={setToggleState}/>
+            <ChatClient myId={myData.id} messages={messages} sendMessage={sendMessage} setFocus={setFocus} avatar={avatar} setToggleState={setToggleState}/>
             :
             <ChatClientCloseCase avatar={avatar} setToggleState={setToggleState}/>
             }

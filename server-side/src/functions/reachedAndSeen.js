@@ -1,9 +1,6 @@
 const {sendToAllSocketOfOneClient} = require('../functions/sendToAllSocketOfOneClient')
 
-const awaitCheckAndChange = async (reachedOrseen, index, userId, reachedId, redisClient, {io, type}) => {
-    
-    //index of the boolean that we need to change it.
-    let reachedOrseenIndex = (reachedOrseen === 'seen') ? 4 : 3;
+const awaitCheckAndChange = async ({indexOfRedes, runThisFun}, index, userId, reachedId, redisClient, {io, type, condition, socketEmitFun}) => {
     
     //Start and end Indexes of the message
     let sIndex = index - 6;
@@ -14,36 +11,8 @@ const awaitCheckAndChange = async (reachedOrseen, index, userId, reachedId, redi
         if(err) {
             console.log(err);
         } else if(data && data.length>2) {
-            if(1 === 1 || (data[0] === reachedId) && ( data[1] !== userId || (data[1] === userId && (type !== 'ADMINROOM')))) {
-                if(data[reachedOrseenIndex] == 'false'){
-                    
-                    redisClient.lset(userId, sIndex+reachedOrseenIndex, true, (err) => {
-                        if (!err) {
-                            let dataEmit = {
-                                id: reachedId,
-                                reached : true,
-                                seen: (reachedOrseen==='seen') ? true : false,
-                            }
-                            //To admin room
-                            if(type === 'ADMINROOM') {                                
-                                io.to('ADMIN').emit('reachedAndSeen', dataEmit);
-                            } else { //To all socket of on client
-                                sendToAllSocketOfOneClient(userId, redisClient, io, 
-                                    {
-                                        type: 'reachedAndSeen',
-                                        data: dataEmit
-                                    }
-                                )
-                                
-                            }
-                            
-                        }
-                        
-                    });
-                    
-                }
-                
-            } else return true;
+
+            return runThisFun(reachedId, data, userId, sIndex, indexOfRedes, redisClient, io, {condition, socketEmitFun});
 
         }
 
@@ -51,7 +20,7 @@ const awaitCheckAndChange = async (reachedOrseen, index, userId, reachedId, redi
 }
 
 
-const reachedAndSeen = (reachedOrseen, userId, reachedId, redisClient, {io, type}) => {
+const reachedAndSeen = ({indexOfRedes, runThisFun}, userId, reachedId, redisClient, {io, type, condition, socketEmitFun}) => {
 
     //We will use a positive number to deal with this.. not -1,-6 to get the latest.. because if the connection is slow this method will be wrong.
     redisClient.llen(userId, (err, num) => {
@@ -65,7 +34,7 @@ const reachedAndSeen = (reachedOrseen, userId, reachedId, redisClient, {io, type
             (async() => {
                 let repeat = true;
                 while (repeat && index >= 6) {
-                    repeat = await awaitCheckAndChange(reachedOrseen, index, userId, reachedId, redisClient, {io, type}) || false;
+                    repeat = await awaitCheckAndChange({indexOfRedes, runThisFun}, index, userId, reachedId, redisClient, {io, type, condition, socketEmitFun}) || false;
                     index = index - 6;
                 }
             
@@ -78,10 +47,95 @@ const reachedAndSeen = (reachedOrseen, userId, reachedId, redisClient, {io, type
 
 };
 
-exports.reached = (userId, reachedId, redisClient, {io, type}) => {
-    reachedAndSeen('reched', userId, reachedId, redisClient, {io, type});
+const reached = (userId, reachedId, redisClient, {io, type, runThisFun, condition, socketEmitFun}) => {
+    return reachedAndSeen({indexOfRedes: 3, runThisFun}, userId, reachedId, redisClient, {io, type, condition, socketEmitFun});
 };
 
-exports.seen = (userId, seenId, redisClient, {io, type}) => {
-    reachedAndSeen('seen', userId, seenId, redisClient, {io, type});
+const seen = (userId, seenId, redisClient, {io, type, runThisFun, condition, socketEmitFun}) => {
+    return reachedAndSeen({indexOfRedes: 4, runThisFun}, userId, seenId, redisClient, {io, type, condition, socketEmitFun});
 };
+
+
+
+//reached
+const runThisFunHOF = (id, data, userId, sIndex, indexOfRedes, redisClient, io, {condition, socketEmitFun}) => {
+
+    if(condition(data, id, userId)) {
+        if(data[indexOfRedes] == 'false'){
+            redisClient.lset(userId, sIndex+indexOfRedes, true, (err) => {
+                if (!err) {
+                    let dataEmit = {
+                        id: id,
+                        reached : true,
+                        seen: (indexOfRedes === 4) ? true : false,
+                    }
+
+                    socketEmitFun(io, dataEmit, userId, redisClient);
+                }
+            });
+        }
+    } else return true;
+}
+
+exports.reachedToUser = (userId, reachedId, redisClient, {io, type}) => {
+    
+    const  condition = (data, id, userId) => {
+        return (data[0] === id && data[1] !== userId)
+    }
+    
+    const socketEmitFun = (io, dataEmit) => {
+        return io.to('ADMIN').emit('reachedAndSeen', dataEmit);
+    }
+
+    return reached(userId, reachedId, redisClient, {io, type, runThisFun: runThisFunHOF, condition, socketEmitFun})
+}
+exports.reachedToAdmin = (userId, reachedId, redisClient, {io, type}) => {
+    
+    const  condition = (data, id, userId) => {
+        return (data[0] === id && data[1] === userId)
+    }
+    
+    const socketEmitFun = (io, dataEmit, userId, redisClient) => {
+        return sendToAllSocketOfOneClient(userId, redisClient, io, 
+            {
+                type: 'reachedAndSeen',
+                data: dataEmit
+            }
+        )
+    }
+
+    return reached(userId, reachedId, redisClient, {io, type, runThisFun: runThisFunHOF, condition, socketEmitFun})
+}
+
+//Seen
+exports.seenFromUser = (userId, seenId, redisClient, {io, type}) => {
+    
+    const  condition = (data, id, userId) => {
+        return (data[0] === id && data[1] !== userId)
+    }
+    
+    const socketEmitFun = (io, dataEmit) => {
+        return io.to('ADMIN').emit('reachedAndSeen', dataEmit);
+    }
+
+    return seen(userId, seenId, redisClient, {io, type, runThisFun: runThisFunHOF, condition, socketEmitFun})
+}
+
+exports.seenFromAdmin = (userId, seenId, redisClient, {io, type}) => {
+    
+    const  condition = (data, id, userId) => {
+        return (data[0] === id && data[1] === userId)
+    }
+    
+    const socketEmitFun = (io, dataEmit, userId, redisClient) => {
+        sendToAllSocketOfOneClient(userId, redisClient, io, 
+            {
+                type: 'reachedAndSeen',
+                data: dataEmit
+            }
+        )
+        io.to('ADMIN').emit('reachedAndSeen', dataEmit);
+    }
+
+    return seen(userId, seenId, redisClient, {io, type, runThisFun: runThisFunHOF, condition, socketEmitFun})
+}

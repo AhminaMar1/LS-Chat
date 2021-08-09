@@ -52,7 +52,7 @@ const {storageForCheking} = require('./src/functions/storageForCheckingUser');
 const {userAuth, adminAuth} = require('./src/functions/authForSocket');
 const {messageFormat, formatSroreInRedis} = require('./src/functions/messageFormat');
 const {sendToAllSocketOfOneClient} = require('./src/functions/sendToAllSocketOfOneClient');
-const {reached, seen} = require('./src/functions/reachedAndSeen')
+const {reachedToUser, reachedToAdmin, seenFromAdmin, seenFromUser} = require('./src/functions/reachedAndSeen')
 
 // IO
 io.on("connection", (socket) => {
@@ -148,7 +148,7 @@ io.on("connection", (socket) => {
 
          let reachedId = data.reached_id;
          
-         reached(checkData.id, reachedId, redisClient, {io, type: 'ADMINROOM'});
+         reachedToUser(checkData.id, reachedId, redisClient, {io, type: 'ADMINROOM'});
 
       });
 
@@ -159,7 +159,7 @@ io.on("connection", (socket) => {
          let reachedId = data.reached_id;
          let userId = data.user_id;
          
-         reached(userId, reachedId, redisClient, {io, type: 'client'});
+         reachedToAdmin(userId, reachedId, redisClient, {io, type: 'client'});
 
       });
    });
@@ -171,7 +171,7 @@ io.on("connection", (socket) => {
 
          let seenId = data.seen_id[0];
          
-         seen(checkData.id, seenId, redisClient, {io, type: 'ADMINROOM'});
+         seenFromUser(checkData.id, seenId, redisClient, {io, type: 'ADMINROOM'});
 
       });
 
@@ -184,7 +184,7 @@ io.on("connection", (socket) => {
          let userId = data.user_id;
          console.log(data)
          
-         seen(userId, seenId, redisClient, {io, type: 'client'});
+         seenFromAdmin(userId, seenId, redisClient, {io, type: 'client'});
 
       });
    });

@@ -123,7 +123,7 @@ io.on("connection", (socket) => {
                date: now
             });
             
-            io.to('ADMIN').emit('newMessageFromAdmin', messageData);
+            io.to('ADMIN').emit('newMessageFromAdmin', {message_data: messageData, to: data.to});
             
             sendToAllSocketOfOneClient(data.to, redisClient, io, {type: 'newMessage', data: messageData});
 

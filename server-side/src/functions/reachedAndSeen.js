@@ -72,12 +72,13 @@ const runThisFunHOF = (id, data, userId, redisClient, io, {field, condition, soc
                 let dataEmit = {
                     id: id,
                     field,
+                    to: userId
                 }
                 
                 socketEmitFun(io, dataEmit, userId, redisClient);
             }
         })
-        
+
     } else return true;
 }
 

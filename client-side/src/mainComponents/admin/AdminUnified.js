@@ -86,22 +86,42 @@ export default function AdminUnified({windowWidth}) {
         dispatch({type: 'removeOneOnlineUser', payload: data})
       });
 
-      socket.on('newMessageFromAdmin', (data) => {
-        dispatch({type: 'addOneMessageFromAdmin', payload: data});
-      });
-
-      socket.on('reachedAndSeen', (data) => {
-        dispatch({type: 'reachedAndSeenDispatch', payload: data});
-      });
 
       return () => {
         socket.off('newOnlineUser');
-        socket.off('newMessageFromAdmin');
         socket.off('RemoveFromOnlineUsers');
-    }
+      }
 
     }
   }, [socketOn, adminData, socket, dispatch]);
+
+    //If socket start => create the listeners and send the first
+    useEffect(() => {    
+      if(socketOn && adminData && adminData.id && adminData.token && chatBoxActive){
+  
+        socket.on('newMessageFromAdmin', (data) => {
+          if (data && data.to === chatBoxActive) {
+            dispatch({type: 'addOneMessageFromAdmin', payload: data.message_data});
+          } else {
+            //TODO:
+          }
+        });
+  
+        socket.on('reachedAndSeen', (data) => {
+          if (data && data.to === chatBoxActive) {
+            dispatch({type: 'reachedAndSeenDispatch', payload: data});
+          } else {
+            //TODO:
+          }
+        });
+  
+        return () => {
+          socket.off('newMessageFromAdmin');
+          socket.off('reachedAndSeen');
+        }
+  
+      }
+    }, [socketOn, adminData, socket, dispatch, chatBoxActive]);
   
   useEffect(() => {   
     if(socketOn && adminData && adminData.id && adminData.token){

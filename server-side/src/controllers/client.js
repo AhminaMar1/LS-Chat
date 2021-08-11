@@ -6,48 +6,61 @@ redisClient.on('connect', () => console.log('Redis client connect'));
 const User = require('../models/user')
 const Chat = require('../models/chat')
 
+const {userAuth, adminAuth} = require('../functions/authForSocket')
 
 exports.lastChatDoc = (req, res) => {
 
-    const getLRange = (redisClient, id, res) => {
-        redisClient.lrange(id, 0, -1, (err, ResData) => {
+    const getLRange = (redisClient, id, res, type) => {
+        let messagesQuery = 'm:'+id;
+        redisClient.lrange(messagesQuery, 0, -1, (err, ResData) => {
+            if(!err && ResData) {
+            
+                let queryRechedAndSeen = 'grs:'+id;
+                redisClient.hgetall(queryRechedAndSeen, (err, hData) => {
+                    if(!err) {
 
-            if(err) {
+                        let resSend = {
+                            messages: ResData,
+                            reached_and_seen: {
+                                my_reached: (!hData) ? null : hData.my_reached,
+                                my_seen: (!hData) ? null : (type === 'admin') ? hData.my_seen || null : null,
+                                admin_reached: (!hData) ? null : hData.admin_reached || null,
+                                admin_seen: (!hData) ? null : hData.admin_seen || null
+                            }
+                        };
 
-            } else {
-                res.status(200).json(ResData);
+                        res.status(200).json(resSend);
+                    }
+                })
+
+
             }
 
         })
     }
 
-    let id = req.query.id;
-    let token = req.query.token;
-    let admin = req.query.admin;
+    let id = req.query.id,
+        token= req.query.token,
+        admin = req.query.admin,
+        userId = req.query.id_user;
 
     if(id && token) {
-        let userQuery = 'USER:'+id;
-        redisClient.get(userQuery, (err, data) => {
-            if(!err && data && token===data){
-                getLRange(redisClient, id, res);
-            }
-        })
-    }else if (admin) {
+        let checkData = {id, token}
+        userAuth({checkData, redisClient}, () => {
+            getLRange(redisClient, id, res, 'user');
+        });
+    }else if (admin && userId) {
 
-        let adminId = req.query.admin_id;
-        let adminToken = req.query.admin_token;
-        let userId = req.query.id_user;
-        
-        if(adminId && adminToken && userId) {
-            let adminQuery = 'ADMIN:'+adminId;
-            redisClient.get(adminQuery, (err, data) => {
-                if(!err && data && adminToken===data){
-                    getLRange(redisClient, userId, res);
-                }
-            })
+        let checkDataAdmin = {
+            id: req.query.admin_id,
+            token: req.query.admin_token
         }
+
+        adminAuth({checkData: checkDataAdmin, redisClient}, () => {
+            getLRange(redisClient, userId, res, 'admin');
+
+        })
     }
-    
 }
 
 exports.prevChatDoc = (req, res) => {

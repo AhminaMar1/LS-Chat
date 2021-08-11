@@ -54,7 +54,6 @@ exports.saveNewSession = async (User, Chat, res) => {
         if (currentChatId) {
             newSession.current_chat_document_id = currentChatId;
             await newSession.save();
-            console.log("cc", currentChatId);
         }
 
         //result to return it

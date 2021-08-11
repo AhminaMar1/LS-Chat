@@ -1,4 +1,5 @@
-import {messagesFormat, oneMessageFormat} from '../../../functions/messagesFormat';
+import {oneMessageFormat} from '../../../functions/messagesFormat';
+import {updateMessagesRAS} from '../../../functions/seenAndRechedFunctions';
 
 const messagesReducer = (state, action = {}) => {
     const { type, payload } = action;
@@ -7,7 +8,7 @@ const messagesReducer = (state, action = {}) => {
       case 'addMessages': {
 
         return {
-          messages: messagesFormat(payload || {}),
+          messages: payload,
         }
       }
       case 'addOneMessageFromUser': {
@@ -37,20 +38,11 @@ const messagesReducer = (state, action = {}) => {
         }
 
       }
-      case 'reachedAndSeenDispatch': {
+      case 'reachedAndSeenDispatch': {        
         return {
-          messages: state.messages.map(el => {
-
-            if(el.id === payload.id) {
-              el.reach = payload.reached;
-              el.seen = payload.seen;
-            }
-            return el;
-          })
+          messages: updateMessagesRAS(state.messages, payload)
         }
-
       }
-      
       default:
         return state
     }

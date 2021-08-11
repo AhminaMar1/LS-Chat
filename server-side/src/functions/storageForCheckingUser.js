@@ -12,11 +12,13 @@ exports.storageForCheking = (data, redisClient, socketId, io) => {
                 token: data.token,
                 name: name
             }
+            let socketIdQuery = 'sid:'+socketId; //si = Socket id
+            redisClient.hmset(socketIdQuery, hmData);
+            
             let userQuery = 'USER:'+id;
             redisClient.set(userQuery, data.token, (err) => {console.log(err)});
 
-            redisClient.hmset(socketId, hmData);
-            let keyOfList = "sl_"+id; // sl = sockets list
+            let keyOfList = "sl:"+id; // sl = sockets list
             redisClient.rpush(keyOfList, socketId, (err) => {
                 if(err){
                     console.log(err);

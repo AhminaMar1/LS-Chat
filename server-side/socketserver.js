@@ -79,7 +79,7 @@ io.on("connection", (socket) => {
 
       let checkData = data.checkData;
 
-      userAuth({id: socket.id, checkData, redisClient}, () => {
+      userAuth({checkData, redisClient}, () => {
          //the callback if the token is true
          let now = new Date();
          let messageData = messageFormat({
@@ -95,8 +95,8 @@ io.on("connection", (socket) => {
          io.to('ADMIN').emit('newMessage', messageData);
    
          let formatRedis = formatSroreInRedis({id: messageData.id, sender: checkData.id, message: messageData.mssg, date: now})
-
-         redisClient.rpush(checkData.id, formatRedis, (err) => {
+         let messagesQuery = 'm:'+checkData.id;
+         redisClient.rpush(messagesQuery, formatRedis, (err) => {
             if (err) {
                console.log(err);
             }
@@ -129,7 +129,8 @@ io.on("connection", (socket) => {
 
             let formatRedis = formatSroreInRedis({id: messageData.id, sender: 'admin', message: messageData.mssg, date: now})
 
-            redisClient.rpush(data.to, formatRedis, (err) => {
+            let messagesQuery = 'm:'+data.to;
+            redisClient.rpush(messagesQuery, formatRedis, (err) => {
                if (err) {
                   console.log(err);
                }
@@ -144,7 +145,7 @@ io.on("connection", (socket) => {
    socket.on("reachedToUser", (data) => {
       let checkData = data.checkData;
 
-      userAuth({id: socket.id, checkData, redisClient}, () => {
+      userAuth({checkData, redisClient}, () => {
 
          let reachedId = data.reached_id;
          
@@ -167,9 +168,9 @@ io.on("connection", (socket) => {
    socket.on("seenFromUser", (data) => {
       let checkData = data.checkData;
 
-      userAuth({id: socket.id, checkData, redisClient}, () => {
+      userAuth({checkData, redisClient}, () => {
 
-         let seenId = data.seen_id[0];
+         let seenId = data.seen_id;
          
          seenFromUser(checkData.id, seenId, redisClient, {io, type: 'ADMINROOM'});
 
@@ -180,9 +181,8 @@ io.on("connection", (socket) => {
    socket.on("seenFromAdmin", (data) => {
       console.log(data.checkData);
       adminAuth({checkData: data.checkData, redisClient}, () => {
-         let seenId = data.seen_id[0];
+         let seenId = data.seen_id;
          let userId = data.user_id;
-         console.log(data)
          
          seenFromAdmin(userId, seenId, redisClient, {io, type: 'client'});
 
@@ -192,15 +192,16 @@ io.on("connection", (socket) => {
    socket.on("disconnect", () => {
 
       //If the user is not an admin
-      redisClient.hgetall(socket.id, (err, retData) => {
-         
+      let socketIdQuery = 'sid:'+socket.id; //si = Socket id
+      redisClient.hgetall(socketIdQuery, (err, retData) => {
          
          if (err){
             console.err(err)
          } else if (retData !== null) {
-               redisClient.del(socket.id);
+               redisClient.del(socketIdQuery);
+
                let id = retData.user_id;
-               let keyOfList = "sl_"+id; // sl = sockets list
+               let keyOfList = "sl:"+id; // sl = sockets list
                redisClient.LREM(keyOfList, 1, socket.id, (err) => {
                   if(err){
                      console.log(err);
@@ -210,8 +211,8 @@ io.on("connection", (socket) => {
                            console.log(err);
                         }else if(num < 1){
                            redisClient.hdel('onlines', id);
-                          //Send the updating of the list of onlines to the Admins
-                          io.to('ADMIN').emit('RemoveFromOnlineUsers', {id: id});
+                           //Send the updating of the list of onlines to the Admins
+                           io.to('ADMIN').emit('RemoveFromOnlineUsers', {id: id});
                         }
                      });
                   }

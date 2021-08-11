@@ -1,18 +1,19 @@
 import React, {useState, useLayoutEffect, useCallback, useRef} from 'react'
 import { useAppState } from '../reducers/AppState';
 import { v4 as uuid } from 'uuid';
+import {returnNotSeen} from '../../../functions/seenAndRechedFunctions';
 
 export default function SendMessage({socket}) {
 
     const refInput = useRef(null);
 
     //States
-    const [{adminData, chatBoxActive}, dispatch] = useAppState();
+    const [{adminData, chatBoxActive, messages, allSeen}, dispatch] = useAppState();
 
     const [clickShift, setClickShift] = useState(false);
     const [newMessage, setNewMessage] = useState('');
     const [allowChange, setAllowChange] = useState(true);
-
+    const [focus, setFocus] = useState(false);
 
     //Functions
 
@@ -65,12 +66,23 @@ export default function SendMessage({socket}) {
 
     //
     const switchFocusToTrue = useCallback( ()=> {
-        dispatch({type:'switchFocus' ,payload: true})
-    }, [dispatch])
+        setFocus(true);
+    }, []);
 
     const switchFocusToFalse = useCallback( ()=> {
-        dispatch({type:'switchFocus' ,payload: false})
-    }, [dispatch])
+        setFocus(false);
+    }, []);
+
+    useLayoutEffect(() => {
+        if(!allSeen && focus && adminData.id && socket && chatBoxActive) {
+            let dataEmit = returnNotSeen(messages, adminData, chatBoxActive);
+            if (dataEmit) {
+                socket.emit('seenFromAdmin', dataEmit);
+            }
+
+            dispatch({type: 'allSeenTrue'});
+        }
+    }, [allSeen, focus, messages, socket, adminData, dispatch, chatBoxActive]);
 
     useLayoutEffect (() => {
 

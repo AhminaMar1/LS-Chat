@@ -1,16 +1,24 @@
-import React, {useEffect, useRef} from 'react'
+import React, {useState, useEffect, useLayoutEffect, useRef} from 'react'
 
 export default function Messages({myId, messages}) {
     //Ref
     const refForScrolling = useRef(null);
 
+    //States
+    const [numberOfMessages, setNumberOfMessages] = useState(0);
+
     //Effects
     useEffect(() => {
-        refForScrolling.current.scrollIntoView();
+        let num = messages.length;
+        setNumberOfMessages(num);
     }, [messages]);
 
-    return (
+    useLayoutEffect(() => {
+        refForScrolling.current.scrollIntoView();
+    }, [numberOfMessages]);
 
+
+    return (
         <div className="messages-group">
             { (messages.length >= 1) ? messages.map( (data) => {
                 return <div className={data.from === myId ? 'me' : ''} key={data.id}>

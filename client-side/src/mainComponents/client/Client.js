@@ -8,7 +8,7 @@ import ChatClientCloseCase from './ChatClientCloseCase';
 import axios from 'axios';
 import { v4 as uuid } from 'uuid';
 import {oneMessageFormat, messagesFormat} from '../../functions/messagesFormat';
-
+import {returnNotSeen, theLastForUser, updateMessagesRAS} from '../../functions/seenAndRechedFunctions'; 
 
 const ENDPOINT = env.END_POINT;
 const API_URL = env.API_URL;
@@ -22,10 +22,11 @@ export default function Client() {
 
     const [messages, setMessages] = useState([]);
 
-    const [socket, setSocket] = useState();
+    const [socket, setSocket] = useState(null);
     const [socketOn, setSocketOn] = useState(false);
     const [focus, setFocus] = useState(false);
     const [allSeen, setAllSeen] = useState(false);
+    const [reachedNow, setReachedNow] = useState(null);
 
     //Effects
     useEffect(() => {
@@ -73,15 +74,32 @@ export default function Client() {
         if(myData && myData.id && myData.token){
             axios.get(`${API_URL}/client/lastchatdoc?id=${myData.id}&token=${myData.token}`)
             .then((data) => {
-                //TODO: Send a socket emit for #the reach#
 
-                let mssgArr = messagesFormat(data.data || {});
+                let mssgArr = messagesFormat(data.data.messages, 
+                    {
+                        admin_seen: data.data.reached_and_seen.admin_seen,
+                        admin_reached: data.data.reached_and_seen.admin_reached,
+                        my_reached: data.data.reached_and_seen.my_reached
+                    });
                 setMessages(mssgArr)
-            
+
+                let theLast = theLastForUser(mssgArr, myData.id);
+                if(theLast && theLast !== data.data.reached_and_seen.my_reached) {
+                    setReachedNow(theLast);
+                }
+
         }).catch((err) => console.log(err));
         }
 
-    }, [myData])
+    }, [myData]);
+
+    useEffect(() => {
+        if(reachedNow && myData && socketOn && socket) {
+            let dataEmit = {reached_id: reachedNow, checkData: myData}
+            socket.emit('reachedToUser', dataEmit);
+            setReachedNow(null);
+        }
+    }, [reachedNow, socketOn, socket, myData])
 
     //Add same listeners and new redis session SOCKETS
     useEffect(() => {
@@ -126,16 +144,12 @@ export default function Client() {
             })
 
             socket.on('reachedAndSeen', (data) => {
-                setMessages((ms) => ms.map(el => {
 
-                    if(el.id === data.id) {
-                        el.reach = data.reached;
-                        el.seen = data.seen;
-                    }
-
-                    return el;
-
-                }))
+                setMessages((ms) => {
+                    let res = updateMessagesRAS(ms, data); //RAS : reched and seen
+                    //The: return(res) is not work, I don't why.
+                    return res.map(el => el);
+                });
             });
             
 
@@ -150,27 +164,11 @@ export default function Client() {
     }, [myData, socket, socketOn])
 
     useEffect(() => {
+        //TODO: NOW --
         if(!allSeen && focus && socketOn) {
-            let needToSeenArr = [];
-            for(let i=messages.length-1, finish = false; i>=0 && finish === false; i--) {
 
-                let el = messages[i];
-                if(el.from !== myData.id && el.seen === false) {
-                    needToSeenArr.push(el.id);
-                } else if (el.from !== myData.id && el.seen === true) {
-                    finish = true;
-                }
-
-            }
-
-            if(needToSeenArr.length > 0) {
-                let dataEmit = {
-                    seen_id: needToSeenArr,
-                    one_message: needToSeenArr.length === 1 ? true : false,
-                    checkData: myData
-                }
-                socket.emit('seenFromUser', dataEmit);
-            }
+            let dataEmit = returnNotSeen(messages, myData);
+            socket.emit('seenFromUser', dataEmit);
             
             setAllSeen(true);
         }

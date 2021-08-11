@@ -98,7 +98,18 @@ export default function AdminUnified({windowWidth}) {
     //If socket start => create the listeners and send the first
     useEffect(() => {    
       if(socketOn && adminData && adminData.id && adminData.token && chatBoxActive){
+        
+        socket.on('newMessage', (data) => {
+          if(data && data.sender_id === chatBoxActive){
   
+            let dataEmit = {reached_id: data.id, user_id: data.sender_id, one_message: true, checkData: adminData}
+            socket.emit('reachedToAdmin', dataEmit);
+  
+            dispatch({type: 'addOneMessageFromUser', payload: data});
+            dispatch({type: 'allSeenFalse'});
+          }
+        });
+
         socket.on('newMessageFromAdmin', (data) => {
           if (data && data.to === chatBoxActive) {
             dispatch({type: 'addOneMessageFromAdmin', payload: data.message_data});
@@ -116,6 +127,7 @@ export default function AdminUnified({windowWidth}) {
         });
   
         return () => {
+          socket.off('newMessage');
           socket.off('newMessageFromAdmin');
           socket.off('reachedAndSeen');
         }
@@ -123,26 +135,6 @@ export default function AdminUnified({windowWidth}) {
       }
     }, [socketOn, adminData, socket, dispatch, chatBoxActive]);
   
-  useEffect(() => {   
-    if(socketOn && adminData && adminData.id && adminData.token){
-
-      socket.on('newMessage', (data) => {
-        if(data && data.sender_id === chatBoxActive){
-
-          let dataEmit = {reached_id: data.id, user_id: data.sender_id, one_message: true, checkData: adminData}
-          socket.emit('reachedToAdmin', dataEmit);
-
-          dispatch({type: 'addOneMessageFromUser', payload: data});
-          dispatch({type: 'allSeenFalse'});
-        }
-      });
-
-      return () => socket.off('newMessage');
-    }
-
-  }, [socketOn, socket, adminData, dispatch, chatBoxActive])
-
-
     return (
         <div>
           {tokenIsValid ?

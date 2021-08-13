@@ -1,5 +1,6 @@
 import React from 'react'
 import { useAppState } from '../reducers/AppState';
+import Image from './Image';
 
 export default function OnlineUsers() {
 
@@ -16,6 +17,7 @@ export default function OnlineUsers() {
                     return(
                         <div onClick={() => dispatch({type:'chatBoxActive', payload: el.id})} key={el.id} className="online-item">
                             <div className="online-icon"></div>
+                            <Image id={el.id} name={el.name}/>
                             {el.name}
                         </div>
                     )

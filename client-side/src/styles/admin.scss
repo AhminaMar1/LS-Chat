@@ -401,10 +401,17 @@ input:focus{
     border: 1px dashed #ccc;
     margin-top: -1px;
     cursor: pointer;
-
     display: flex;
     &:hover{
         background-color: #ccc;
+    }
+
+    img{
+        z-index: 1;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        margin: -6px 5px 0 -5px;
     }
 }
 

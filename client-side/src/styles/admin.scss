@@ -213,6 +213,15 @@ input:focus{
 .u-m-inf{
     display: block;
 
+    img {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        float: left;
+        margin-right: 10px;
+        margin-top: 2px;
+    }
+
 }
 
 .u-m-name{

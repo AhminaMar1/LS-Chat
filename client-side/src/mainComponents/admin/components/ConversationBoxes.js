@@ -1,4 +1,5 @@
 import React from 'react'
+import Image from './Image';
 import { useAppState } from '../reducers/AppState';
 
 
@@ -15,13 +16,14 @@ export default function ConversationBoxes() {
                 
                 <div className="search-box">
                     <input type="text" placeholder="search for a user" />
-                    <div className="search-button"><i className="fas fa-settarch" /></div>
+                    <div className="search-button"><i className="fas fa-search" /></div>
                 </div>
 
                 {conversations.map((el) => {
                     return (
                         <div key={el.id} className={(el.id === chatBoxActive) ? 'u-m-item u-m-item-active' : 'u-m-item'} onClick={() => dispatch({type: 'chatBoxActive', payload: el.id})}>
                             <div className="u-m-inf">
+                                <Image id={el.id} name={el.name}/>
                                 <div className="u-m-name">{el.name}</div>
                                 <div className="u-m-date">Today</div>
                             </div>

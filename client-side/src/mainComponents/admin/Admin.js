@@ -6,6 +6,7 @@ import tokenIsValidReducer from './reducers/TokenIsValidReducer'
 import onlineUsersReducer from './reducers/OnlineUsersReducer'
 import chatBoxActiveReducer from './reducers/ChatBoxActiveReducer'
 import messagesReducer from './reducers/MessagesReducer'
+import conversationsReducer from './reducers/ConversationsReducer'
 import focusReducer from './reducers/FocusReducer';
 import allSeenReducer from './reducers/AllSeenReducer';
 import AdminUnified from './AdminUnified';
@@ -21,6 +22,7 @@ function Admin() {
     allSeen: allSeenReducer,
     onlineUsers: onlineUsersReducer,
     messages: messagesReducer,
+    conversations: conversationsReducer
   })
   
   //States

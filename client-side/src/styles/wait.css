@@ -1,0 +1,29 @@
+.container-wait {
+  background-color: #ccc;
+  width: 100%;
+  height: 100vh;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 10px;
+}
+
+.container-wait img {
+  width: 70px;
+}
+
+.container-wait b {
+  color: #444;
+  font-weight: 600;
+}
+/*# sourceMappingURL=wait.css.map */

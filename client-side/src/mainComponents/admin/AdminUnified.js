@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useMemo} from 'react'
 import socketIOClient from "socket.io-client";
 import NormalScreen from './AdminNormalScreen';
 import SmallScreen from './AdminSmallScreen';
@@ -18,6 +18,7 @@ export default function AdminUnified({windowWidth}) {
   const [{adminData, tokenIsValid, chatBoxActive}, dispatch] = useAppState()
   const [socketOn, setSocketOn] = useState(false);
   const [socket, setSocket] = useState();
+  const [oneTime, setOneTime] = useState(false);
 
   //Functions
   const redirectToLoginPage = () => {
@@ -134,7 +135,23 @@ export default function AdminUnified({windowWidth}) {
   
       }
     }, [socketOn, adminData, socket, dispatch, chatBoxActive]);
+
+    useEffect(() => {
+        
+      if (!oneTime && adminData && adminData.id && adminData.token) {
+          axios.get(`${API_URL}/admin/moreconversations?admin=yes&admin_id=${adminData.id}&admin_token=${adminData.token}`)
+          .then((data) => {
+              console.log(data.data)
+              dispatch({type: 'addConversationsList', payload: data.data});
+
+              setOneTime(true);
+          }).catch((err) => console.log(err));
+      }
+    }, [oneTime, adminData, dispatch]);
   
+    //Caching of all images links
+
+
     return (
         <div>
           {tokenIsValid ?

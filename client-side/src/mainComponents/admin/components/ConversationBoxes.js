@@ -1,78 +1,35 @@
 import React from 'react'
+import { useAppState } from '../reducers/AppState';
+
+
 
 export default function ConversationBoxes() {
+
+    //States with useReduser
+
+    const [{conversations, chatBoxActive}, dispatch] = useAppState();
+
     return (
         <div className="flex-msgs-users-box" id="msg-user-display">
             <div className="u-m-list">
                 
                 <div className="search-box">
                     <input type="text" placeholder="search for a user" />
-                    <div className="search-button"><i className="fas fa-search" /></div>
+                    <div className="search-button"><i className="fas fa-settarch" /></div>
                 </div>
 
-                <div className="u-m-item">
-                    <div className="u-m-inf">
-                        <div className="u-m-name">John doe</div>
-                        <div className="u-m-date">Today</div>
-                    </div>
-                    <div className="u-m-msg">Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim necessitatibus distinctio laboriosam.</div>
-                </div>
+                {conversations.map((el) => {
+                    return (
+                        <div key={el.id} className={(el.id === chatBoxActive) ? 'u-m-item u-m-item-active' : 'u-m-item'} onClick={() => dispatch({type: 'chatBoxActive', payload: el.id})}>
+                            <div className="u-m-inf">
+                                <div className="u-m-name">{el.name}</div>
+                                <div className="u-m-date">Today</div>
+                            </div>
+                            <div className="u-m-msg">{el.message_data[2]}</div>
+                        </div>
+                    )
+                })}
 
-                <div className="u-m-item u-m-item-active">
-                    <div className="u-m-inf">
-                        <div className="u-m-name">John doe</div>
-                        <div className="u-m-date">Today</div>
-                    </div>
-                    <div className="u-m-msg">Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim necessitatibus distinctio laboriosam.</div>
-                </div>
-
-                <div className="u-m-item">
-                    <div className="u-m-inf">
-                        <div className="u-m-name">John doe</div>
-                        <div className="u-m-date">Today</div>
-                    </div>
-                    <div className="u-m-msg">Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim necessitatibus distinctio laboriosam.</div>
-                </div>
-                
-                <div className="u-m-item">
-                    <div className="u-m-inf">
-                        <div className="u-m-name">John doe</div>
-                        <div className="u-m-date">Today</div>
-                    </div>
-                    <div className="u-m-msg">Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim necessitatibus distinctio laboriosam.</div>
-                </div>
-
-                <div className="u-m-item">
-                    <div className="u-m-inf">
-                        <div className="u-m-name">John doe</div>
-                        <div className="u-m-date">Today</div>
-                    </div>
-                    <div className="u-m-msg">Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim necessitatibus distinctio laboriosam.</div>
-                </div>
-
-                <div className="u-m-item">
-                    <div className="u-m-inf">
-                        <div className="u-m-name">John doe</div>
-                        <div className="u-m-date">Today</div>
-                    </div>
-                    <div className="u-m-msg">Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim necessitatibus distinctio laboriosam.</div>
-                </div>
-
-                <div className="u-m-item">
-                    <div className="u-m-inf">
-                        <div className="u-m-name">John doe</div>
-                        <div className="u-m-date">Today</div>
-                    </div>
-                    <div className="u-m-msg">Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim necessitatibus distinctio laboriosam.</div>
-                </div>
-
-                <div className="u-m-item">
-                    <div className="u-m-inf">
-                        <div className="u-m-name">John doe</div>
-                        <div className="u-m-date">Today</div>
-                    </div>
-                    <div className="u-m-msg">Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim necessitatibus distinctio laboriosam.</div>
-                </div>
             </div>
         </div>
 

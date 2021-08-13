@@ -5,7 +5,8 @@ const initialState = {
     focus: false,
     allSeen: false,
     onlineUsers: [],
-    messages: []
+    messages: [],
+    conversations: []
   }
   
   const combineReducers = reducers => {

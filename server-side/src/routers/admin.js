@@ -8,9 +8,7 @@ const adminController = require('../controllers/admin');
 router.get('/firstget' , adminController.firstGet);
 
 // the next 10 (DB)
-router.get('/moreconversations' , (req , res)=>{
-
-});
+router.get('/moreconversations' , adminController.moreConversations);
 
 router.post('/login' , adminController.login);
 

@@ -5,8 +5,8 @@ redisClient.on('connect', () => console.log('Redis admin connect'));
 
 const Admin = require('../models/admin')
 const bcrypt = require ('bcrypt');
-
-
+const {adminAuth} = require('../functions/authForSocket');
+const {getConversations} = require('../functions/arrangeConversations');
 exports.firstGet= (req, res) => {
 
     const tokenIsFalse = (res) => {
@@ -15,31 +15,53 @@ exports.firstGet= (req, res) => {
 
 
     if(req.query && req.query.admin_id && req.query.admin_token) {
-        let queryGetAdmin = 'ADMIN:'+req.query.admin_id;
-        redisClient.get(queryGetAdmin, (err, data)=> {
-            if(err){
+        let checkData = {
+            id: req.query.admin_id,
+            token: req.query.admin_token
+        };
 
-            } else if (data && data === req.query.admin_token){
-                redisClient.hgetall('onlines', (err, onlinesData) => {
+        adminAuth({checkData, redisClient}, () => {
+            //callback // like a resoleve
+            redisClient.hgetall('onlines', (err, onlinesData) => {
 
-                    if(!err) {
-                        res.json({token_is_true: true, onlines: onlinesData});
-                    } else {
-                        tokenIsFalse(res);
-                    }
-                    
-                })
+                if(!err) {
+                    res.json({token_is_true: true, onlines: onlinesData});
+                } else {
+                    tokenIsFalse(res);
+                }
+                
+            })
 
-            } else {
-                tokenIsFalse(res);
-            }
+
+        }, () => {
+            //reject // like a error
+            tokenIsFalse(res);
         })
+
+
+        
     }
 
     
 }
 
 exports.moreConversations= (req, res) => {
+    if(req.query && req.query.admin_id && req.query.admin_token) {
+        let checkData = {
+            id: req.query.admin_id,
+            token: req.query.admin_token
+        };
+        adminAuth({checkData, redisClient}, () => {
+        
+            let start = req.query.id_start || null;
+            
+            getConversations(redisClient, start, (data) => {
+                res.status(200).json(data); 
+            });
+        
+        });
+
+    }
 
 }
 

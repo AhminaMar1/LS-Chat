@@ -53,6 +53,7 @@ const {userAuth, adminAuth} = require('./src/functions/authForSocket');
 const {messageFormat, formatSroreInRedis} = require('./src/functions/messageFormat');
 const {sendToAllSocketOfOneClient} = require('./src/functions/sendToAllSocketOfOneClient');
 const {reachedToUser, reachedToAdmin, seenFromAdmin, seenFromUser} = require('./src/functions/reachedAndSeen')
+const {arrangeConversations, getConversations} = require('./src/functions/arrangeConversations');
 
 // IO
 io.on("connection", (socket) => {
@@ -102,6 +103,8 @@ io.on("connection", (socket) => {
             }
          })
 
+         arrangeConversations(redisClient, checkData.id);
+
       })
 
 
@@ -135,6 +138,8 @@ io.on("connection", (socket) => {
                   console.log(err);
                }
             })
+
+            arrangeConversations(redisClient, data.to);
 
          })     
 

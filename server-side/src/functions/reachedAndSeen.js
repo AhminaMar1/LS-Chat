@@ -102,12 +102,14 @@ exports.reachedToAdmin = (userId, reachedId, redisClient, {io, type}) => {
     }
     
     const socketEmitFun = (io, dataEmit, userId, redisClient) => {
-        return sendToAllSocketOfOneClient(userId, redisClient, io, 
+            sendToAllSocketOfOneClient(userId, redisClient, io, 
             {
                 type: 'reachedAndSeen',
                 data: dataEmit
-            }
-        )
+            })
+
+            io.to('ADMIN').emit('reachedAndSeen', dataEmit);
+
     }
 
     return reached(userId, reachedId, redisClient, {io, type, field: 'admin_reached', runThisFun: runThisFunHOF, condition, socketEmitFun})

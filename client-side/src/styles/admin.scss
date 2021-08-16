@@ -202,6 +202,12 @@ input:focus{
     flex-direction: column;
     padding: 15px 15px;
     cursor: pointer;
+    i{
+        color: #aaa;
+    }
+    .check-active{
+        color: $active-chat;
+    }
 }
 
 .u-m-item:hover, .u-m-item-active{

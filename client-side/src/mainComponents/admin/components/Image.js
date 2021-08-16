@@ -16,7 +16,7 @@ export default function Images({id, name}) {
             el = el.toLowerCase();
 
             if(bgArr.length < 6) {
-                if (arrOfCharHex.some(el0 => el0 === el)) {
+                if (arrOfCharHex.some(el0 => el0 === el) || el > 7) {
                     bgArr.push(el);
                 } else if(el > 0) {
                     numBg.push(el);

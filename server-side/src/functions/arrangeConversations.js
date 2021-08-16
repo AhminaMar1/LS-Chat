@@ -73,12 +73,12 @@ const getAllDataAboutAConv = async (redisClient, id, callbackToPush) => {
     let messageData = await asyncClient.lrange('m:'+id, -4, -1);
     let name = await asyncClient.get('NAME:'+id);
     let rechedAndSeen = await asyncClient.hgetall('grs:'+id);
-    let seen = false, reched = false;
+    let seen = false, reached = false;
     if(rechedAndSeen) {
         
         console.log(rechedAndSeen, messageData[0])
         seen = rechedAndSeen.my_seen === messageData[0] || rechedAndSeen.admin_seen === messageData[0];
-        reched = seen || rechedAndSeen.my_reached === messageData[0] || rechedAndSeen.admin_reached === messageData[0];
+        reached = seen || rechedAndSeen.my_reached === messageData[0] || rechedAndSeen.admin_reached === messageData[0];
     
     }
     
@@ -87,7 +87,7 @@ const getAllDataAboutAConv = async (redisClient, id, callbackToPush) => {
         id,
         name,
         message_data: messageData,
-        reched,
+        reached,
         seen
     }
     callbackToPush(data);

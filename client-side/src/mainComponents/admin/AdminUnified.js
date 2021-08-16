@@ -98,9 +98,10 @@ export default function AdminUnified({windowWidth}) {
 
     //If socket start => create the listeners and send the first
     useEffect(() => {    
-      if(socketOn && adminData && adminData.id && adminData.token && chatBoxActive){
+      if(socketOn && adminData && adminData.id && adminData.token){
         
         socket.on('newMessage', (data) => {
+          
           if(data && data.sender_id === chatBoxActive){
   
             let dataEmit = {reached_id: data.id, user_id: data.sender_id, one_message: true, checkData: adminData}
@@ -108,23 +109,29 @@ export default function AdminUnified({windowWidth}) {
   
             dispatch({type: 'addOneMessageFromUser', payload: data});
             dispatch({type: 'allSeenFalse'});
+            
           }
+          let convData = {to: data.sender_id, id: data.id, mssg: data.mssg, seen: false, reached: false}
+          dispatch({type: 'updateConversationsList', payload: convData});
+        
         });
 
         socket.on('newMessageFromAdmin', (data) => {
           if (data && data.to === chatBoxActive) {
             dispatch({type: 'addOneMessageFromAdmin', payload: data.message_data});
-          } else {
-            //TODO:
           }
+          let convData = {to: data.to, id: data.message_data.id, mssg: data.message_data.mssg, seen: false, reached: false}
+          dispatch({type: 'updateConversationsList', payload: convData});
+
         });
   
         socket.on('reachedAndSeen', (data) => {
           if (data && data.to === chatBoxActive) {
             dispatch({type: 'reachedAndSeenDispatch', payload: data});
-          } else {
-            //TODO:
           }
+            
+          dispatch({type: 'updateRASOfConversations', payload: data});
+          
         });
   
         return () => {

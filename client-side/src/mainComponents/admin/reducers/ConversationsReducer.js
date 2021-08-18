@@ -1,23 +1,36 @@
+const convFormat = (el) => {
+  return {
+    id: el.id,
+    mssg_id: el.message_data[0],
+    name: el.name,
+    mssg: el.message_data[2],
+    seen: el.seen,
+    reached: el.reached,
+    date: el.message_data[3]
+  }
+}
+
 const conversationsReducer = (state, action = {}) => {
     const { type, payload } = action;
     switch (type) {
       case 'addConversationsList': {
         return {
-          conversations: payload.map(el => {
-            return {
-              id: el.id,
-              mssg_id: el.message_data[0],
-              name: el.name,
-              mssg: el.message_data[2],
-              seen: el.seen,
-              reached: el.reached,
-              date: el.message_data[3]
-            }
-          }),
+          conversations: payload.map(el => convFormat(el)),
         }
       }
+      case 'newConversationsList': {
+        let newConvs = state.conversations;
+      
+        payload.forEach(el => {
+          newConvs.push(convFormat(el))
+        });
+
+
+        return {conversations: newConvs}
+        
+      }
       case 'updateConversationsList': {
-        //Todo
+        
         let theFirstConv = {
           id: payload.to,
           mssg_id: payload.id,

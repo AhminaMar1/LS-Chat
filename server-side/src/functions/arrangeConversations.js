@@ -56,7 +56,16 @@ exports.arrangeConversations = (redisClient, userId) => {
 
 const getStartFrom = (redisClient, startFrom = null, callback) => {
     if(startFrom) {
-        callback(startFrom);
+        redisClient.hget('next_lc', startFrom, (err, theNext) => {
+            if(!err && theNext) {
+                callback(theNext);
+            }
+            else {
+                callback(null);
+            }
+        });
+        
+
     } else {
         redisClient.get('thelastconv', (err, startFromData) => {
             if (err) {
@@ -108,22 +117,28 @@ exports.getConversations = (redisClient, startFrom = null, callback) => {
         (async() => {
 
             let arr = [];
-            let i= 0;
+            let i = 0;
             
             let nextId = newStartFrom;
             while (nextId && i <= 10) {
-
-                getAllDataAboutAConv(redisClient, nextId, (data) => {
+                i++;
+                
+                await getAllDataAboutAConv(redisClient, nextId, (data) => {
                     arr.push(data);
+                    console.log(nextId, data)
                 });
 
                 nextId = await getTheNext(redisClient, nextId);
-                i++;
-
-                if(!nextId || i > 10) {
+                
+                if(nextId === 'null' || i === 10) {
                     callback(arr)
+                    nextId = false;
                 }
 
+            }
+
+            if(nextId === null && i === 0) {
+                callback([])
             }
 
         })();

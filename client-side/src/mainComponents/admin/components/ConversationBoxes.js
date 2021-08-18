@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useState, useEffect, useLayoutEffect, useRef} from 'react'
 import Image from './Image';
 import { useAppState } from '../reducers/AppState';
 import axios from 'axios';
@@ -10,9 +10,13 @@ const API_URL = env.API_URL;
 
 export default function ConversationBoxes() {
 
-    //States with useReduser
+    //Ref
+    const convRef = useRef(null);
 
+    //States & states with useReduser
     const [{conversations, chatBoxActive, adminData}, dispatch] = useAppState();
+    const [doNewRefresh, setDoNewRefresh] = useState(false);
+    const [stopNewRefreshes, setStopNewRefreshes] = useState(false);
 
     //Effect
     useEffect(() => {
@@ -25,9 +29,63 @@ export default function ConversationBoxes() {
             }    
     }, [conversations, adminData, dispatch]);
 
+    
+    const scrollHandle = (e) => {
+
+        let doNewrefresh = e.target.scrollHeight - (e.target.scrollTop + e.target.clientHeight) < 100;
+        
+        setDoNewRefresh(doNewrefresh);
+    }
+    useLayoutEffect(() => {
+        convRef.current.addEventListener('scroll', scrollHandle);
+
+        //To debugging an eslint err
+        let checkRefCurrent = null;
+        if (convRef.current) {
+            checkRefCurrent = convRef.current;
+        }
+
+        return () => {
+            checkRefCurrent.removeEventListener('scroll', scrollHandle)
+        }
+
+    }, []);
+
+    const restartRefreshes = () => {
+        setDoNewRefresh(false);
+        setStopNewRefreshes(false);
+    }
+
+    useEffect(() => {
+        
+        if(doNewRefresh && !stopNewRefreshes) {
+            setStopNewRefreshes(true);
+            if (adminData && adminData.id && adminData.token && conversations.length > 0) {
+                let idOftheLast = conversations[conversations.length-1].id;
+
+                axios.get(`${API_URL}/admin/moreconversations?admin_id=${adminData.id}&admin_token=${adminData.token}&id_start=${idOftheLast}`)
+                .then((data) => {
+                    if (data.data.length > 0) {
+                        dispatch({type: 'newConversationsList', payload: data.data});
+                        restartRefreshes(false);
+                    }
+                }
+                ).catch((err) => {
+                    console.log(err);
+                    restartRefreshes(false);
+                });
+
+            } else {
+                restartRefreshes(false);
+            }
+        }
+
+
+    }, [adminData, doNewRefresh, stopNewRefreshes, conversations, dispatch])
+
     return (
         <div className="flex-msgs-users-box" id="msg-user-display">
-            <div className="u-m-list">
+            <div ref={convRef} className="u-m-list">
                 
                 <div className="search-box">
                     <input type="text" placeholder="search for a user" />

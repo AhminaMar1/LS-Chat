@@ -101,11 +101,13 @@ export default function AdminUnified({windowWidth}) {
       if(socketOn && adminData && adminData.id && adminData.token){
         
         socket.on('newMessage', (data) => {
-          
-          if(data && data.sender_id === chatBoxActive){
+          if (data && data.sender_id) {
   
             let dataEmit = {reached_id: data.id, user_id: data.sender_id, one_message: true, checkData: adminData}
             socket.emit('reachedToAdmin', dataEmit);
+
+          }
+          if(data && data.sender_id === chatBoxActive){
   
             dispatch({type: 'addOneMessageFromUser', payload: data});
             dispatch({type: 'allSeenFalse'});

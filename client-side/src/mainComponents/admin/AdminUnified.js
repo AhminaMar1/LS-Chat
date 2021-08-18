@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useMemo} from 'react'
+import React, {useState, useEffect} from 'react'
 import socketIOClient from "socket.io-client";
 import NormalScreen from './AdminNormalScreen';
 import SmallScreen from './AdminSmallScreen';
@@ -113,7 +113,7 @@ export default function AdminUnified({windowWidth}) {
             dispatch({type: 'allSeenFalse'});
             
           }
-          let convData = {to: data.sender_id, id: data.id, mssg: data.mssg, seen: false, reached: false}
+          let convData = {to: data.sender_id, id: data.id, mssg: data.mssg, sender_id: data.sender_id, seen: false, reached: false}
           dispatch({type: 'updateConversationsList', payload: convData});
         
         });
@@ -122,7 +122,8 @@ export default function AdminUnified({windowWidth}) {
           if (data && data.to === chatBoxActive) {
             dispatch({type: 'addOneMessageFromAdmin', payload: data.message_data});
           }
-          let convData = {to: data.to, id: data.message_data.id, mssg: data.message_data.mssg, seen: false, reached: false}
+
+          let convData = {to: data.to, id: data.message_data.id, sender_id: data.message_data.sender_id, mssg: data.message_data.mssg, seen: false, reached: false}
           dispatch({type: 'updateConversationsList', payload: convData});
 
         });

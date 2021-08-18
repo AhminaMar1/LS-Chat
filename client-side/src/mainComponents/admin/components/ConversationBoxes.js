@@ -98,6 +98,9 @@ export default function ConversationBoxes() {
                             <div className="u-m-inf">
                                 <Image id={el.id} name={el.name}/>
                                 <div className="u-m-name">{el.name}</div>
+                                {!el.seen && el.id === el.sender_id ?
+                                   <div className="u-m-new"><p>new</p></div>
+                                :''}
                                 <div className="u-m-date">Today</div>
                             </div>
                             <div className="u-m-msg">{el.mssg}</div>

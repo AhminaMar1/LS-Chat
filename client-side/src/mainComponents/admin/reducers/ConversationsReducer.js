@@ -3,6 +3,7 @@ const convFormat = (el) => {
     id: el.id,
     mssg_id: el.message_data[0],
     name: el.name,
+    sender_id: el.message_data[1],
     mssg: el.message_data[2],
     seen: el.seen,
     reached: el.reached,
@@ -30,10 +31,11 @@ const conversationsReducer = (state, action = {}) => {
         
       }
       case 'updateConversationsList': {
-        
+        console.log(payload)
         let theFirstConv = {
           id: payload.to,
           mssg_id: payload.id,
+          sender_id: payload.sender_id,
           name: '??',
           mssg: payload.mssg,
           seen: payload.seen,

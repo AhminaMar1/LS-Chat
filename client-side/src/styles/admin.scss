@@ -238,6 +238,20 @@ input:focus{
 
 }
 
+.u-m-new{
+    float: left;
+    margin: 4px 2px 0 2px;
+    p {
+        box-sizing: border-box;
+        margin: 0px 5px;
+        background: rgb(245, 83, 83);
+        color: white;
+        border-radius: 10px;
+        border: 1px solid #aaa;
+        line-height: 16px;
+        padding: 6px 6px 0 6px;
+    }
+}
 .u-m-date{
     float: right;
     color: #666;

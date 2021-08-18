@@ -3,6 +3,15 @@ const redisClient = redis.createClient();
 //connet with redis
 redisClient.on('connect', () => console.log('Redis admin connect'));
 
+//Async redis
+const asyncRedis = require("async-redis");
+const asyncClient = asyncRedis.createClient();
+
+asyncClient.on("error", function (err) {
+    console.log("Error " + err);
+});
+
+
 const Admin = require('../models/admin')
 const bcrypt = require ('bcrypt');
 const {adminAuth} = require('../functions/authForSocket');
@@ -55,7 +64,7 @@ exports.moreConversations= (req, res) => {
         
             let start = req.query.id_start || null;
             
-            getConversations(redisClient, start, (data) => {
+            getConversations({redisClient, asyncClient}, start, (data) => {
                 res.status(200).json(data); 
             });
         

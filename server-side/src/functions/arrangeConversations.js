@@ -1,11 +1,3 @@
-const asyncRedis = require("async-redis");
-const asyncClient = asyncRedis.createClient();
-
-asyncClient.on("error", function (err) {
-    console.log("Error " + err);
-});
-
-
 exports.arrangeConversations = (redisClient, userId) => {
     
     redisClient.get('thelastconv', (err, theLastConv) => {
@@ -77,7 +69,7 @@ const getStartFrom = (redisClient, startFrom = null, callback) => {
     }
 }
 
-const getAllDataAboutAConv = async (redisClient, id, callbackToPush) => {
+const getAllDataAboutAConv = async (asyncClient, id, callbackToPush) => {
 
     let messageData = await asyncClient.lrange('m:'+id, -4, -1);
     let name = await asyncClient.get('NAME:'+id);
@@ -103,14 +95,14 @@ const getAllDataAboutAConv = async (redisClient, id, callbackToPush) => {
 }
 
 
-const getTheNext = async (redisClient, id) => {
+const getTheNext = async (asyncClient, id) => {
 
     return await asyncClient.hget('next_lc', id);
 
 }
 
 
-exports.getConversations = (redisClient, startFrom = null, callback) => {
+exports.getConversations = ({redisClient, asyncClient}, startFrom = null, callback) => {
     
     getStartFrom(redisClient, startFrom, (newStartFrom) => {
         
@@ -123,12 +115,12 @@ exports.getConversations = (redisClient, startFrom = null, callback) => {
             while (nextId && i <= 10) {
                 i++;
                 
-                await getAllDataAboutAConv(redisClient, nextId, (data) => {
+                await getAllDataAboutAConv(asyncClient, nextId, (data) => {
                     arr.push(data);
                     console.log(nextId, data)
                 });
 
-                nextId = await getTheNext(redisClient, nextId);
+                nextId = await getTheNext(asyncClient, nextId);
                 
                 if(nextId === 'null' || i === 10) {
                     callback(arr)

@@ -21,7 +21,8 @@ export default function Client() {
     const [myData, setMyData] = useState({id: false, token:false});
 
     const [messages, setMessages] = useState([]);
-
+    const [nNotification, setNNotification] = useState(0);
+    const [mySeen, setMyseen] = useState(null);
     const [socket, setSocket] = useState(null);
     const [socketOn, setSocketOn] = useState(false);
     const [focus, setFocus] = useState(false);
@@ -74,7 +75,8 @@ export default function Client() {
         if(myData && myData.id && myData.token){
             axios.get(`${API_URL}/client/lastchatdoc?id=${myData.id}&token=${myData.token}`)
             .then((data) => {
-
+                
+                setMyseen(data.data.reached_and_seen.my_seen);
                 let mssgArr = messagesFormat(data.data.messages, 
                     {
                         admin_seen: data.data.reached_and_seen.admin_seen,
@@ -87,6 +89,7 @@ export default function Client() {
                 if(theLast && theLast !== data.data.reached_and_seen.my_reached) {
                     setReachedNow(theLast);
                 }
+
 
         }).catch((err) => console.log(err));
         }
@@ -164,16 +167,43 @@ export default function Client() {
     }, [myData, socket, socketOn])
 
     useEffect(() => {
-        //TODO: NOW --
+        
         if(!allSeen && focus && socketOn) {
 
             let dataEmit = returnNotSeen(messages, myData);
             socket.emit('seenFromUser', dataEmit);
             
             setAllSeen(true);
+
+            if(dataEmit) {
+                setMyseen(dataEmit.seen_id);
+            }
         }
     }, [allSeen, focus, messages, socket, socketOn, myData]);
+
+    //Effet to get numbers of notification
+
+    useEffect(() => {
+        let messageLen = messages.length;
+        if(myData && myData.id && messageLen > 0 && !allSeen) {
+            let myId = myData.id, nNotification = 0;
+            for(let i = messageLen - 1; i >= 0; i--) {
+                if (myId !== messages[i].from && messages[i].id !== mySeen) {
+                    nNotification++;
+                } else {
+                    i = 0;
+                }
+            }
+            setNNotification(nNotification);
+            
+        }
+    }, [messages, myData, mySeen, allSeen])
     
+    useEffect(() => {
+        if(allSeen) {
+            setNNotification(0);
+        }
+    }, [allSeen])
     //Functions
 
     const sendMessage = useCallback((newMessage) => {
@@ -201,7 +231,7 @@ export default function Client() {
             {
             (myData.id === false) ? '' :
             (togleState) ?
-            <ChatClient myId={myData.id} messages={messages} sendMessage={sendMessage} setFocus={setFocus} avatar={avatar} setToggleState={setToggleState}/>
+            <ChatClient myId={myData.id} nNotification={nNotification} messages={messages} sendMessage={sendMessage} setFocus={setFocus} avatar={avatar} setToggleState={setToggleState}/>
             :
             <ChatClientCloseCase avatar={avatar} setToggleState={setToggleState}/>
             }

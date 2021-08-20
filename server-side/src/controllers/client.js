@@ -23,7 +23,7 @@ exports.lastChatDoc = (req, res) => {
                             messages: ResData,
                             reached_and_seen: {
                                 my_reached: (!hData) ? null : hData.my_reached,
-                                my_seen: (!hData) ? null : (type === 'admin') ? hData.my_seen || null : null,
+                                my_seen: (!hData) ? null : hData.my_seen,
                                 admin_reached: (!hData) ? null : hData.admin_reached || null,
                                 admin_seen: (!hData) ? null : hData.admin_seen || null
                             }

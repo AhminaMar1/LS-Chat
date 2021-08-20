@@ -2,7 +2,7 @@ import React from 'react'
 import Messages from './Messages';
 import SendMessage from './SendMessage';
 
-export default function ChatClient({myId, messages, sendMessage, setFocus, avatar, setToggleState}) {
+export default function ChatClient({myId, nNotification, messages, sendMessage, setFocus, avatar, setToggleState}) {
 
     return (
         <div className="chat-client">
@@ -11,6 +11,7 @@ export default function ChatClient({myId, messages, sendMessage, setFocus, avata
                     <img src={avatar} alt="admin pic" />
                     <div className="name">Omar</div>
                     <i className="i-live-admin" />
+                    {(nNotification > 0) ? <div className="n-notification">{nNotification}</div> : ''}
                 </div>
                 <div className="more-and-close">
                     <span className="dots-icons">

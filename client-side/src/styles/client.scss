@@ -77,6 +77,18 @@ body{
             font-size: 20px;
             margin-left: 9px;
         }
+        .n-notification{
+            font-family: monospace;
+            background: #F84F31;
+            color: white;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+            border-radius: 50%;
+            margin: -6px 10px 0 10px;
+            padding: 1px 1px 0 0;
+        }
     }
     
     .i-live-admin{

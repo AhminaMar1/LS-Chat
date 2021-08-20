@@ -104,7 +104,7 @@ export default function SendMessage({socket}) {
     }, [switchFocusToTrue, switchFocusToFalse]);
     
     return (
-        <form onSubmit={submitMessage}>
+        <form onSubmit={submitMessage} className="sticky-position">
             <div className="input-chat-box-flex">
                 <div className="input-chat-box">
                     <div className="button-group">

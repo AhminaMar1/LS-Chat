@@ -354,13 +354,21 @@ input:focus{
 }
 
     /**input and button **/
-
+.sticky-position{
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+    padding: 15px 30px;
+    background: #fff;
+    margin-left: -30px;
+}
 .input-chat-box-flex{
     width: 100%;
     display: flex;
     justify-content: center;
-    margin-top: 40px;
-    margin-bottom: 20px;
+    margin-top: 20px;
+
+
     .input-chat-box{
         width: 95%;
         display: flex;

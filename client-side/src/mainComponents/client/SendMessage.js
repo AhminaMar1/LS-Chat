@@ -19,17 +19,17 @@ export default function SendMessage({sendMessage, setFocus}) {
     }
 
     const sendMessageFun = () => {
-        sendMessage(newMessageHere);
-        setNewMessageHere('');
+        if(newMessageHere!==''){
+            sendMessage(newMessageHere);
+            setNewMessageHere('');
+        }
     }
 
     const handleKeyDown = (e) => {
         if (!clickShift && e.keyCode === 16) { //shift
             setClickShift(true);
         } else if (!clickShift && e.keyCode === 13) {
-            if(newMessageHere!==''){
-                sendMessageFun();
-            }
+                sendMessageFun(newMessageHere);
             setAllowChange(false);
         } else if (clickShift) {
             setClickShift(false);
@@ -67,7 +67,7 @@ export default function SendMessage({sendMessage, setFocus}) {
     return (
         <div className="input-group">
             <div className="button-flex">
-                <button><i className="far fa-paper-plane" /></button>
+                <button onClick={() => sendMessageFun(newMessageHere)}><i className="far fa-paper-plane" /></button>
             </div>
             <textarea name="message" ref={refInput} value={newMessageHere} onKeyDown={handleKeyDown} onChange={(e) => handleChange(e)}></textarea>
         </div>

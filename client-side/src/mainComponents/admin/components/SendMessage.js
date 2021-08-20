@@ -46,6 +46,12 @@ export default function SendMessage({socket}) {
             setAllowChange(true);
         }
     }
+    const sendTheMessage = (newMessage) => {
+        if(newMessage!==''){
+            sendMessage();
+        }
+        setAllowChange(false);
+    }
 
     const handleKeyDown = (e) => {
 
@@ -54,10 +60,7 @@ export default function SendMessage({socket}) {
         if (!clickShift && e.keyCode === 16) { //shift
             setClickShift(true);
         } else if (!clickShift && e.keyCode === 13) {
-            if(newMessage!==''){
-                sendMessage();
-            }
-            setAllowChange(false);
+            sendTheMessage(newMessage)
         } else if (clickShift) {
             setClickShift(false);
         }
@@ -108,7 +111,7 @@ export default function SendMessage({socket}) {
             <div className="input-chat-box-flex">
                 <div className="input-chat-box">
                     <div className="button-group">
-                        <button>Send</button>
+                        <button onClick={() => sendTheMessage(newMessage)}>Send</button>
                     </div>
                     <textarea ref={refInput} onKeyDown={handleKeyDown} onChange={handleChange} value={newMessage} type="text"></textarea>
                 </div>

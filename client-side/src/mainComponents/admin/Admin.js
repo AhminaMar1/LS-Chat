@@ -5,6 +5,7 @@ import adminDataReducer from './reducers/AdminDataReducer'
 import tokenIsValidReducer from './reducers/TokenIsValidReducer'
 import onlineUsersReducer from './reducers/OnlineUsersReducer'
 import chatBoxActiveReducer from './reducers/ChatBoxActiveReducer'
+import dataClientReducer from './reducers/DataClientReducer'
 import messagesReducer from './reducers/MessagesReducer'
 import conversationsReducer from './reducers/ConversationsReducer'
 import focusReducer from './reducers/FocusReducer';
@@ -18,6 +19,7 @@ function Admin() {
     adminData: adminDataReducer,
     tokenIsValid: tokenIsValidReducer,
     chatBoxActive: chatBoxActiveReducer,
+    dataClient: dataClientReducer,
     focus: focusReducer,
     allSeen: allSeenReducer,
     onlineUsers: onlineUsersReducer,

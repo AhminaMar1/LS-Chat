@@ -83,6 +83,18 @@ export default function ConversationBoxes() {
 
     }, [adminData, doNewRefresh, stopNewRefreshes, conversations, dispatch])
 
+    //clickHandle on conversation of a user
+    const clickHandle = (el) => {
+
+        let data = {
+            name: el.name,
+            url_pic: false
+        }
+
+        dispatch({type:'chatBoxActive', payload: el.id})
+        dispatch({type:'newDataClient', payload: data}); //We need to change the url_pic if we got the pic of user from another place.
+    }
+
     return (
         <div className="flex-msgs-users-box" id="msg-user-display">
             <div ref={convRef} className="u-m-list">
@@ -94,7 +106,7 @@ export default function ConversationBoxes() {
 
                 {conversations.map((el) => {
                     return (
-                        <div key={el.id} className={(el.id === chatBoxActive) ? 'u-m-item u-m-item-active' : 'u-m-item'} onClick={() => dispatch({type: 'chatBoxActive', payload: el.id})}>
+                        <div key={el.id} className={(el.id === chatBoxActive) ? 'u-m-item u-m-item-active' : 'u-m-item'} onClick={() => clickHandle(el)}>
                             <div className="u-m-inf">
                                 <Image id={el.id} name={el.name}/>
                                 <div className="u-m-name">{el.name}</div>

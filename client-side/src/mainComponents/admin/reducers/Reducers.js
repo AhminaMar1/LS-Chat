@@ -2,6 +2,7 @@ const initialState = {
     adminData: { id: false, token: false },
     tokenIsValid: null,
     chatBoxActive: false,
+    dataClient: {name: false, url_pic:false},
     focus: false,
     allSeen: false,
     onlineUsers: [],

@@ -55,6 +55,6 @@ export default function Images({id, name}) {
     }, [id, name]);
 
     return (
-        <img src={link} alt={name} />
+        <img src={link} alt={name || 'no name'} />
     )
 }

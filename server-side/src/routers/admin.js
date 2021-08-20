@@ -16,4 +16,7 @@ router.get('/getname' , adminController.getName);
 //login part
 router.post('/login' , adminController.login);
 
+
+router.post('/checkadmin' , adminController.checkAdmin);
+
 module.exports  = router;

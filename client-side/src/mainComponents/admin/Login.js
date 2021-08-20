@@ -85,7 +85,6 @@ export default function Login(){
         axios.post(`${API_URL}/admin/login`, data)
         .then(res => {
             let success = res.data.success_login;
-            console.log(res)
             if (success === false) {
                 setStatusLogin(false);
                 setHidall(false);
@@ -105,10 +104,28 @@ export default function Login(){
     }
 
     // Send POST api to check the id and the token that store in localStorage
-    const testToken = (id, token) => {
-        //Send POST axios
+    const testToken = async (id, token, {redirectToAdminHome, setHidall}) => {
+        let data = {
+            admin_id: id,
+            admin_token: token
+        }
 
-        return true;
+        await axios.post(`${API_URL}/admin/checkadmin`, data)
+        .then(res => {
+
+            let data = res.data;
+
+            if(data && data.auth) {
+                redirectToAdminHome()
+            } else {
+                setHidall(false);
+            }
+
+
+        }).catch(err => {
+            console.log(err);
+        });
+
     }
 
     //Check first if there are a session in localStorage
@@ -118,14 +135,7 @@ export default function Login(){
 
         if(id && token) {
             //Call testToken function
-            // TODO: Complete the function and add the Async
-            let testingOfToken = testToken(id, token);
-
-            if(testingOfToken) {
-                redirectToAdminHome();
-            }else {
-                setHidall(false);
-            }
+                testToken(id, token, {redirectToAdminHome, setHidall});
 
         }else {
             setHidall(false);

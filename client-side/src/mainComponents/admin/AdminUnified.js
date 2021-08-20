@@ -32,6 +32,9 @@ export default function AdminUnified({windowWidth}) {
 
     dispatch({type: 'addAdminData', payload: {id, token}})
 
+    if(!id || !token) {
+      dispatch({type: 'tokenIsFalse'});
+    }
 
   }, [dispatch]);
 
@@ -41,14 +44,13 @@ export default function AdminUnified({windowWidth}) {
 
       axios.get(`${API_URL}/admin/firstget?admin_id=${adminData.id}&admin_token=${adminData.token}`)
       .then((data) => {
-        
         if(data && data.data.token_is_true){
           dispatch({type: 'addOnlineUsers', payload: data.data.onlines});
           
-          //Todo: We need to add validation..
+          //DONE: We need to add validation..
           dispatch({type: 'tokenIsTrue'});
         } else {
-          //dispatch({type: 'tokenIsFalse'});
+          dispatch({type: 'tokenIsFalse'});
         }
 
         
@@ -151,7 +153,7 @@ export default function AdminUnified({windowWidth}) {
       if (!oneTime && adminData && adminData.id && adminData.token) {
           axios.get(`${API_URL}/admin/moreconversations?admin=yes&admin_id=${adminData.id}&admin_token=${adminData.token}`)
           .then((data) => {
-              console.log(data.data)
+
               dispatch({type: 'addConversationsList', payload: data.data});
 
               setOneTime(true);

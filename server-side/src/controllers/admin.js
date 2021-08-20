@@ -19,7 +19,7 @@ const {getConversations} = require('../functions/arrangeConversations');
 exports.firstGet= (req, res) => {
 
     const tokenIsFalse = (res) => {
-        res.json({token_is_true: false});
+        res.status(200).json({token_is_true: false});
     }
 
 
@@ -44,6 +44,7 @@ exports.firstGet= (req, res) => {
 
         }, () => {
             //reject // like a error
+            console.log('cccc')
             tokenIsFalse(res);
         })
 
@@ -147,4 +148,31 @@ exports.login= async (req, res) => {
             });
         }
     });
+}
+
+exports.checkAdmin= async (req, res) => {
+    
+    let checkData = {
+        id: req.body.admin_id,
+        token: req.body.admin_token
+    };
+
+    adminAuth({checkData, redisClient}, 
+        //True
+        () => {
+            let resSend = {
+                auth: true
+            }
+            res.status(200).json(resSend);
+        },
+        //false
+        () => {
+            let resSend = {
+                auth: false
+            }
+
+            res.status(200).json(resSend);
+        }
+
+        );
 }

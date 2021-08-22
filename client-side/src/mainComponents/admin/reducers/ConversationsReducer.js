@@ -1,10 +1,25 @@
+const splitTheMsssg = (mssg) => {
+  
+  let newNssg;
+
+  if(mssg.length > 80) {
+    newNssg = mssg.substring(0, 73)+'....';
+  } else {
+    newNssg = mssg;
+  }
+
+  return newNssg;
+
+
+}
+
 const convFormat = (el) => {
   return {
     id: el.id,
     mssg_id: el.message_data[0],
     name: el.name,
     sender_id: el.message_data[1],
-    mssg: el.message_data[2],
+    mssg: splitTheMsssg(el.message_data[2]),
     seen: el.seen,
     reached: el.reached,
     date: el.message_data[3]
@@ -37,7 +52,7 @@ const conversationsReducer = (state, action = {}) => {
           mssg_id: payload.id,
           sender_id: payload.sender_id,
           name: '??',
-          mssg: payload.mssg,
+          mssg: splitTheMsssg(payload.mssg),
           seen: payload.seen,
           reached: payload.reached,
         }

@@ -104,6 +104,8 @@ export default function ConversationBoxes() {
                     <div className="search-button"><i className="fas fa-search" /></div>
                 </div>
 
+                {(conversations.length === 0) ? <div className="nothing-found">There are no conversations</div> : ''}
+
                 {conversations.map((el) => {
                     return (
                         <div key={el.id} className={(el.id === chatBoxActive) ? 'u-m-item u-m-item-active' : 'u-m-item'} onClick={() => clickHandle(el)}>

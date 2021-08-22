@@ -79,33 +79,35 @@ io.on("connection", (socket) => {
    socket.on("sendMessage", (data) => {
 
       let checkData = data.checkData;
-
-      userAuth({checkData, redisClient}, () => {
-         //the callback if the token is true
-         let now = new Date();
-         let messageData = messageFormat({
-            id: data.id,
-            message: data.message,
-            sender: checkData.id,
-            now: now
-         });
-      
-         sendToAllSocketOfOneClient(checkData.id, redisClient, io, {type: 'newMessageFromMe', data: messageData});
-
-         //send to admins
-         io.to('ADMIN').emit('newMessage', messageData);
+      if(checkData && checkData.id) {
+         
+         userAuth({checkData, redisClient}, () => {
+            //the callback if the token is true
+            let now = new Date();
+            let messageData = messageFormat({
+               id: data.id,
+               message: data.message,
+               sender: checkData.id,
+               now: now
+            });
+         
+            sendToAllSocketOfOneClient(checkData.id, redisClient, io, {type: 'newMessageFromMe', data: messageData});
    
-         let formatRedis = formatSroreInRedis({id: messageData.id, sender: checkData.id, message: messageData.mssg, date: now})
-         let messagesQuery = 'm:'+checkData.id;
-         redisClient.rpush(messagesQuery, formatRedis, (err) => {
-            if (err) {
-               console.log(err);
-            }
+            //send to admins
+            io.to('ADMIN').emit('newMessage', messageData);
+      
+            let formatRedis = formatSroreInRedis({id: messageData.id, sender: checkData.id, message: messageData.mssg, date: now})
+            let messagesQuery = 'm:'+checkData.id;
+            redisClient.rpush(messagesQuery, formatRedis, (err) => {
+               if (err) {
+                  console.log(err);
+               }
+            })
+   
+            arrangeConversations(redisClient, checkData.id);
+   
          })
-
-         arrangeConversations(redisClient, checkData.id);
-
-      })
+      }
 
 
             
@@ -114,7 +116,7 @@ io.on("connection", (socket) => {
    socket.on("adminSendMessage", (data) => {
       let checkData = data.checkData;
 
-      if(checkData) {
+      if(checkData && data.to) {
 
          adminAuth({checkData, redisClient}, () => {
             //Callback function

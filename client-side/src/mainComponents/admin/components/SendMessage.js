@@ -113,7 +113,7 @@ export default function SendMessage({socket}) {
                     <div className="button-group">
                         <button onClick={() => sendTheMessage(newMessage)}>Send</button>
                     </div>
-                    <textarea ref={refInput} onKeyDown={handleKeyDown} onChange={handleChange} value={newMessage} type="text"></textarea>
+                    <textarea ref={refInput} onKeyDown={handleKeyDown} onChange={handleChange} value={newMessage} type="text" dir="auto"></textarea>
                 </div>
             </div>
         </form>

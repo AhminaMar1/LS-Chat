@@ -336,12 +336,12 @@ input:focus{
 }
 
 .chat-msg-admin{
-    direction: rtl;
+    direction: auto;
     p{
         background-color: $primary-color;
         color: #fff;
         margin-left: auto;
-        direction: ltr;
+        direction: auto;
     }
 }
 
@@ -583,6 +583,15 @@ input:focus{
 
 }
 
+
+.nothing-found{
+    width: 100%;
+    text-align: center;
+    padding: 25px 0 20px 0;
+    color: #444;
+}
+
+.element { direction: rtl; }
 
 /* The media for a min screen*/
 @media (max-width: 1000px){

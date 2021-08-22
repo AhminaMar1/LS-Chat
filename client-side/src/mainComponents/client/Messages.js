@@ -34,7 +34,7 @@ export default function Messages({myId, messages}) {
                     </div>
                     : <div className="wid-5"></div> 
                     }
-                    <p>
+                    <p dir="auto">
                         {data.mssg}
                     </p>
                     </div>

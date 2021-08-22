@@ -24,6 +24,7 @@ export default function OnlineUsers() {
             <div className="list-online">
                 <h2>online</h2>
 
+                {(onlineUsers.length === 0) ? <div className="nothing-found">No user is online</div> : ''}
                 
                 {onlineUsers.map( (el) => {
                     return(

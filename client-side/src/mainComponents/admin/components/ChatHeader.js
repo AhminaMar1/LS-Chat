@@ -33,6 +33,7 @@ export default function ChatHeader() {
 
     return (
         <div className="chat-header">
+            {(!dataClient.name) ? <div className="nothing-found">No one selected</div> : ''}
             {chatBoxActive ? <Image id={chatBoxActive} name={dataClient.name}/> : ''}
             <b>{dataClient.name}</b>
             <div className="online-icon" style={(online) ? style : noneStyle}></div>

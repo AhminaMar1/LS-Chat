@@ -69,7 +69,7 @@ export default function SendMessage({sendMessage, setFocus}) {
             <div className="button-flex">
                 <button onClick={() => sendMessageFun(newMessageHere)}><i className="far fa-paper-plane" /></button>
             </div>
-            <textarea name="message" ref={refInput} value={newMessageHere} onKeyDown={handleKeyDown} onChange={(e) => handleChange(e)}></textarea>
+            <textarea name="message" ref={refInput} value={newMessageHere} onKeyDown={handleKeyDown} onChange={(e) => handleChange(e)} dir="auto"></textarea>
         </div>
     )
 }

@@ -63,6 +63,7 @@ export default function Messages({socket}) {
     
     return (
         <>
+            {(messages.length === 0) ? <div className="nothing-found">No message found</div> : ''}
             {messages.map((el) => 
                 <div key={el.id} className={el.from === chatBoxActive ? 'chat-msg chat-msg-user' : 'chat-msg chat-msg-admin'}>
                     <div>
@@ -75,7 +76,7 @@ export default function Messages({socket}) {
                         : ''
                         }
                     </div>
-                    <p>
+                    <p dir="auto">
                         {el.mssg}
                     </p>
                 </div>

@@ -83,6 +83,17 @@ export default function ConversationBoxes() {
 
     }, [adminData, doNewRefresh, stopNewRefreshes, conversations, dispatch])
 
+    useEffect(() => {
+
+        if(!chatBoxActive && conversations.length > 0) {
+            dispatch({type: 'chatBoxActive', payload: conversations[0].id});
+            dispatch({type: 'newDataClient', payload: {name: conversations[0].name, url_pic: false}});
+
+            
+        }
+        
+    }, [chatBoxActive, conversations, dispatch]);
+
     //clickHandle on conversation of a user
     const clickHandle = (el) => {
 

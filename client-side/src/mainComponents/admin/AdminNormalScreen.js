@@ -14,7 +14,7 @@ export default function NormalScreen({socket}){
             </header>
             <main>
                 <div className="flex">
-                    <ConversationBoxes />
+                    <ConversationBoxes openConv={true} />
                     <ChatBox socket={socket}/>
                     <OnlineUsers />
                 </div>

@@ -8,7 +8,7 @@ const API_URL = env.API_URL;
 
 
 
-export default function ConversationBoxes() {
+export default function ConversationBoxes({openConv}) {
 
     //Ref
     const convRef = useRef(null);
@@ -85,14 +85,14 @@ export default function ConversationBoxes() {
 
     useEffect(() => {
 
-        if(!chatBoxActive && conversations.length > 0) {
+        if(openConv && !chatBoxActive && conversations.length > 0) {
             dispatch({type: 'chatBoxActive', payload: conversations[0].id});
             dispatch({type: 'newDataClient', payload: {name: conversations[0].name, url_pic: false}});
 
             
         }
         
-    }, [chatBoxActive, conversations, dispatch]);
+    }, [openConv, chatBoxActive, conversations, dispatch]);
 
     //clickHandle on conversation of a user
     const clickHandle = (el) => {

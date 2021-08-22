@@ -23,7 +23,7 @@ export default function SmallScreen({socket}){
                     {(chatBoxActive) ? 
                     <ChatBox socket={socket}/> 
                     : (blockId===1) ? 
-                    <ConversationBoxes /> 
+                    <ConversationBoxes openConv={false} /> 
                     : (blockId===2) ? 
                     <OnlineUsers /> 
                     : ''}

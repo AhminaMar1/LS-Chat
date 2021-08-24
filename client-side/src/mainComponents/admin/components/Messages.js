@@ -7,7 +7,7 @@ import {messagesFormat} from '../../../functions/messagesFormat';
 
 const API_URL = env.API_URL;
 
-export default function Messages({socket}) {
+export default function Messages({socket, typeScreen}) {
     //Ref
     const refForScrolling = useRef(null);
     //States
@@ -62,7 +62,7 @@ export default function Messages({socket}) {
 
     
     return (
-        <>
+        <div className={(typeScreen === "normal") ? "min-full-h-normal" : "min-full-h-small"}>
             {(messages.length === 0) ? <div className="nothing-found">No message found</div> : ''}
             {messages.map((el) => 
                 <div key={el.id} className={el.from === chatBoxActive ? 'chat-msg chat-msg-user' : 'chat-msg chat-msg-admin'}>
@@ -82,6 +82,6 @@ export default function Messages({socket}) {
                 </div>
             )}
             <div ref={refForScrolling}></div>
-        </>
+        </div>
     )
 }

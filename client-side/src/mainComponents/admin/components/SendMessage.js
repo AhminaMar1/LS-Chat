@@ -106,6 +106,9 @@ export default function SendMessage({socket}) {
         }
     }, [switchFocusToTrue, switchFocusToFalse]);
     
+    useLayoutEffect(() => {
+        refInput.current.focus();
+    }, [chatBoxActive])
     return (
         <form onSubmit={submitMessage} className="sticky-position">
             <div className="input-chat-box-flex">

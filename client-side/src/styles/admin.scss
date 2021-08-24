@@ -309,9 +309,6 @@ input:focus{
     box-sizing: border-box;
     max-width: 100%;
     display: flex;
-}
-
-.chat-msg{
     margin-top: -20px;
     div {
         width: 20px;
@@ -336,19 +333,28 @@ input:focus{
 }
 
 .chat-msg-admin{
-    direction: auto;
     p{
         background-color: $primary-color;
         color: #fff;
         margin-left: auto;
-        direction: auto;
+        order: 1;
+
+    }
+    div{
+        order: 2;
     }
 }
 
 .chat-msg-user{
+    
     p{
         background-color: #eee;
         color: #333;
+        order: 2;
+
+    }
+    div {
+        order: 1;
     }
     
 }
@@ -590,7 +596,20 @@ input:focus{
     padding: 25px 0 20px 0;
     color: #444;
 }
-
+.min-full-h-normal{
+    box-sizing: border-box;
+    margin-top: -235px;
+    min-height: 100vh;
+    padding-top: 235px;
+    
+}
+.min-full-h-small{
+    box-sizing: border-box;
+    margin-top: -280px;
+    min-height: 100vh;
+    padding-top: 280px;
+    
+}
 .element { direction: rtl; }
 
 /* The media for a min screen*/

@@ -5,13 +5,13 @@ import SendMessage from './SendMessage';
 import ChatHeader from './ChatHeader';
 
 
-export default function ChatBox({socket}) {
+export default function ChatBox({socket, typeScreen}) {
 
     return (
         <div className="flex-chat-box" id="chat-display">
             <div className="chat-container">
                 <ChatHeader />
-                <Messages socket={socket} />
+                <Messages socket={socket} typeScreen={typeScreen} />
                 <SendMessage socket={socket}/>
             </div>
             

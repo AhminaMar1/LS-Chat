@@ -24,7 +24,7 @@ export const messagesFormat = (allMssg = [], {my_seen = null, admin_seen, my_rea
         }
 
         if(allMssg[i] === my_reached || allMssg[i] === admin_reached) {
-            if (timesReached > 0) {
+            if (timesReached > 0 || (!my_seen)) {
                 reached = false;
             }
             timesReached++;

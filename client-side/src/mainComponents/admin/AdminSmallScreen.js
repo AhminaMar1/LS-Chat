@@ -21,7 +21,7 @@ export default function SmallScreen({socket}){
             <main>
                 <div className="flex">
                     {(chatBoxActive) ? 
-                    <ChatBox socket={socket}/> 
+                    <ChatBox socket={socket} typeScreen="samll"/> 
                     : (blockId===1) ? 
                     <ConversationBoxes openConv={false} /> 
                     : (blockId===2) ? 

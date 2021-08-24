@@ -6,6 +6,9 @@ const mongoose = require('mongoose')
 const redis = require('redis');
 const redisClient = redis.createClient();
 
+//Async redis
+const asyncRedis = require("async-redis");
+const asyncClient = asyncRedis.createClient();
 
 //The env
 require('dotenv').config()
@@ -54,6 +57,7 @@ const {messageFormat, formatSroreInRedis} = require('./src/functions/messageForm
 const {sendToAllSocketOfOneClient} = require('./src/functions/sendToAllSocketOfOneClient');
 const {reachedToUser, reachedToAdmin, seenFromAdmin, seenFromUser} = require('./src/functions/reachedAndSeen')
 const {arrangeConversations, getConversations} = require('./src/functions/arrangeConversations');
+const {addNewMessage} = require('./src/functions/addNewMessage');
 
 // IO
 io.on("connection", (socket) => {
@@ -97,12 +101,9 @@ io.on("connection", (socket) => {
             io.to('ADMIN').emit('newMessage', messageData);
       
             let formatRedis = formatSroreInRedis({id: messageData.id, sender: checkData.id, message: messageData.mssg, date: now})
-            let messagesQuery = 'm:'+checkData.id;
-            redisClient.rpush(messagesQuery, formatRedis, (err) => {
-               if (err) {
-                  console.log(err);
-               }
-            })
+
+            addNewMessage(checkData.id, formatRedis, {redisClient, asyncClient}, true);
+
    
             arrangeConversations(redisClient, checkData.id);
    
@@ -134,12 +135,8 @@ io.on("connection", (socket) => {
 
             let formatRedis = formatSroreInRedis({id: messageData.id, sender: 'admin', message: messageData.mssg, date: now})
 
-            let messagesQuery = 'm:'+data.to;
-            redisClient.rpush(messagesQuery, formatRedis, (err) => {
-               if (err) {
-                  console.log(err);
-               }
-            })
+            //TODO *We need to check data.to*
+            addNewMessage(data.to, formatRedis, {redisClient});
 
             arrangeConversations(redisClient, data.to);
 

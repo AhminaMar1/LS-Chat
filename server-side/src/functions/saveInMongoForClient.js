@@ -1,25 +1,56 @@
+const setNewCurrDocIdInUserDoc = (getTheUser, theNewCurr) => {
+    getTheUser.current_chat_document_id = theNewCurr;
+    getTheUser.save();
+}
+
+const setNewNewDocIdInChatDoc = async (chatId, ChatModel, theNewNew) => {
+    
+    const chathDoc = await ChatModel.findById(chatId);
+    if (chathDoc) {
+        chathDoc.next_documet_id = theNewNew;
+        chathDoc.save();
+    }
+    
+}
+
 //create a new chat-document
-saveNewChatFun = async (Chat, userDocumentId, prevChatId) => {
-
-    const chat = new Chat({
-        user_id : userDocumentId,
-        prev_documet_id: prevChatId
-    })
-    try {
-
-
-        const saveChate = await chat.save();
-
-        return (saveChate._id);
-
-    } catch (err) {
-        return false;
+exports.saveNewChat = async (userId, UserModel, ChatModel, messages) => {
+    const getTheUser = await UserModel.findById(userId);
+    
+    if(getTheUser) {
+        
+        let curr = getTheUser.current_chat_document_id || null;
+        
+        const newChat = new ChatModel({
+            user_id : userId,
+            prev_documet_id: curr,
+            next_documet_id: null,
+            messages: messages
+        })
+        try {
+            
+            const saveChat = await newChat.save();
+                            
+            setNewCurrDocIdInUserDoc(getTheUser, saveChat._id);
+            
+            if (curr) {
+                setNewNewDocIdInChatDoc(curr, ChatModel, saveChat._id);
+            }
+    
+        } catch (err) {
+            return false;
+        }
+   
     }
 
 }
 
+//Get the current chat_id // use this just after checking the client 
+
+
+
 ///// start session - client
-exports.saveNewSession = async (User, Chat, res) => {
+exports.saveNewSession = async (User, res) => {
     // random name
     const names = ['Chai', 'Robin', 'Lofi', 'Soku', 'Yori', 'Ham'];
     const leng = names.length;
@@ -50,11 +81,6 @@ exports.saveNewSession = async (User, Chat, res) => {
 
         let newSession = await user.save();
 
-        let currentChatId = await saveNewChatFun(Chat, newSession._id, null);
-        if (currentChatId) {
-            newSession.current_chat_document_id = currentChatId;
-            await newSession.save();
-        }
 
         //result to return it
         const resultat = {
@@ -72,4 +98,3 @@ exports.saveNewSession = async (User, Chat, res) => {
     }
 }
 
-exports.saveNewChat = saveNewChatFun;

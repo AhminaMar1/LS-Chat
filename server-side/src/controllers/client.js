@@ -4,10 +4,12 @@ const redisClient = redis.createClient();
 redisClient.on('connect', () => console.log('Redis client connect'));
 
 const User = require('../models/user')
-const Chat = require('../models/chat')
+
 
 const {userAuth, adminAuth} = require('../functions/authForSocket')
 
+
+//We get this from the redis
 exports.lastChatDoc = (req, res) => {
 
     const getLRange = (redisClient, id, res, type) => {
@@ -76,13 +78,13 @@ exports.startSession = async (req, res) => {
 
     if (id === null || token === null){
         //Create new session
-        clientFunctions.saveNewSession(User, Chat, res)
+        clientFunctions.saveNewSession(User, res)
     } else {
         User.findById(id, function (err, user) {
             if (err || !user) {
 
                 //Create new session
-                clientFunctions.saveNewSession(User, Chat, res)
+                clientFunctions.saveNewSession(User, res)
     
             } else {
                 
@@ -99,7 +101,7 @@ exports.startSession = async (req, res) => {
                     res.status(200).json(resultat)
                 } else {
                     //Create new session
-                    clientFunctions.saveNewSession(User, Chat, res)
+                    clientFunctions.saveNewSession(User, res)
                 }
             }
         });

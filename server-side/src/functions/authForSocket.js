@@ -31,7 +31,7 @@ exports.adminAuth = ({checkData, redisClient}, callback, reject = null) => {
             if(reject) {
                reject();
             }
-            console.log('The token admin is wrong');
+            console.log('The admin token is wrong');
          }
       });
    }

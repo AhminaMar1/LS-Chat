@@ -65,7 +65,6 @@ export default function ChatBox({socket, typeScreen}) {
         if(youCanRefreshes && doNewRefresh && !stopNewRefreshes && !weGetAll) {
             setStopNewRefreshes(true);
             if (adminData && adminData.id && adminData.token) {
-                console.log("Cccccc" + docIdTurn)
                 axios.get(`${API_URL}/client/prevchatdoc?admin=yes&admin_id=${adminData.id}&admin_token=${adminData.token}&id_user=${chatBoxActive}&doc_id=${docIdTurn}`)
                 .then((data) => {
                     let messagesData = data.data;
@@ -76,7 +75,6 @@ export default function ChatBox({socket, typeScreen}) {
                             messages = messagesData.messages || [];
 
                         dispatch({type: 'addMessagesFromMongo', payload: messages})
-                        console.log(messages);
                         if (turn) {
                             setDocIdTurn(turn);
                         } else {

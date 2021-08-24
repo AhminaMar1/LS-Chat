@@ -46,7 +46,7 @@ const conversationsReducer = (state, action = {}) => {
         
       }
       case 'updateConversationsList': {
-        console.log(payload)
+        
         let theFirstConv = {
           id: payload.to,
           mssg_id: payload.id,

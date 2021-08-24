@@ -5,7 +5,6 @@ import React, {useMemo} from 'react'
 export default function Images({id, name}) {
 
     const link = useMemo(() => {
-        console.log('..TimesMEMOS..');
         let arrOfCharHex = ['a', 'b', 'c', 'd', 'e', 'f']
         let bgArrPossible = (id) ? id.split('') : ['f', 'a', 'e'];
 

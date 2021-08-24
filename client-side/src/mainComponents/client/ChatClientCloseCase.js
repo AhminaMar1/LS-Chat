@@ -68,7 +68,7 @@ export default function ChatClientCloseCase({avatar, setToggleState}) {
 
         } else {
             //Get position of "elRefChatClient"
-            console.log(elRefChatClient);
+            
             y = elRefChatClient.current.offsetTop || 10;
             x = elRefChatClient.current.offsetLeft || 10;
      

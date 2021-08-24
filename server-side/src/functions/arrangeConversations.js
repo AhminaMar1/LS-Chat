@@ -77,7 +77,6 @@ const getAllDataAboutAConv = async (asyncClient, id, callbackToPush) => {
     let seen = false, reached = false;
     if(rechedAndSeen) {
         
-        console.log(rechedAndSeen, messageData[0])
         seen = rechedAndSeen.my_seen === messageData[0] || rechedAndSeen.admin_seen === messageData[0];
         reached = seen || rechedAndSeen.my_reached === messageData[0] || rechedAndSeen.admin_reached === messageData[0];
     
@@ -117,7 +116,6 @@ exports.getConversations = ({redisClient, asyncClient}, startFrom = null, callba
                 
                 await getAllDataAboutAConv(asyncClient, nextId, (data) => {
                     arr.push(data);
-                    console.log(nextId, data)
                 });
 
                 nextId = await getTheNext(asyncClient, nextId);

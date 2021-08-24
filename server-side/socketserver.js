@@ -183,7 +183,6 @@ io.on("connection", (socket) => {
    });
 
    socket.on("seenFromAdmin", (data) => {
-      console.log(data.checkData);
       adminAuth({checkData: data.checkData, redisClient}, () => {
          let seenId = data.seen_id;
          let userId = data.user_id;

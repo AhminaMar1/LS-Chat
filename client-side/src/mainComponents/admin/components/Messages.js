@@ -64,7 +64,6 @@ export default function Messages({socket, typeScreen, setYouCanRefreshes, setSto
             setNumberOfMessages(num);
 
         }else if (num > numberOfMessages) {
-            console.log(num, numberOfMessages)
             if(num > numberOfMessages+10) {
                 setNumberOfMessages(num);
                 

@@ -44,7 +44,6 @@ exports.firstGet= (req, res) => {
 
         }, () => {
             //reject // like a error
-            console.log('cccc')
             tokenIsFalse(res);
         })
 

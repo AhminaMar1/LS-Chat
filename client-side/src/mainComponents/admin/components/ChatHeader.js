@@ -25,7 +25,6 @@ export default function ChatHeader() {
         if(chatBoxActive) {
             
             let newOnlineState = onlineUsers.some(el => el.id === chatBoxActive);
-            console.log(newOnlineState)
             setOnline(newOnlineState);
         }
 

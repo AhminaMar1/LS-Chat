@@ -1,4 +1,4 @@
-import {oneMessageFormat} from '../../../functions/messagesFormat';
+import {oneMessageFormat, messagesFormatFromMongo} from '../../../functions/messagesFormat';
 import {updateMessagesRAS} from '../../../functions/seenAndRechedFunctions';
 
 const messagesReducer = (state, action = {}) => {
@@ -9,6 +9,12 @@ const messagesReducer = (state, action = {}) => {
 
         return {
           messages: payload,
+        }
+      }
+      case 'addMessagesFromMongo': {
+
+        return {
+          messages: [...messagesFormatFromMongo(payload), ...state.messages],
         }
       }
       case 'addOneMessageFromUser': {

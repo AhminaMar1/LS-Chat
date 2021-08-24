@@ -48,3 +48,20 @@ export const oneMessageFormat = (data, [sent = false, reach = false, seen = fals
 
     return dataStore;
 }
+
+export const messagesFormatFromMongo = (data) => {
+
+    let dataStore = data.map((el) => {
+        return{
+            id: el.id,
+            from: el.sender_id,
+            mssg: el.message,
+            sent: true,
+            reach: true,
+            seen: true,
+            date: el.date
+        }
+    })
+
+    return dataStore;
+}

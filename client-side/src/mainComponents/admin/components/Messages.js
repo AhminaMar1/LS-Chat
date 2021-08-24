@@ -7,14 +7,17 @@ import {messagesFormat} from '../../../functions/messagesFormat';
 
 const API_URL = env.API_URL;
 
-export default function Messages({socket, typeScreen}) {
+export default function Messages({socket, typeScreen, setYouCanRefreshes, setStopNewRefreshes}) {
     //Ref
-    const refForScrolling = useRef(null);
+    const refForScrollingToThis = useRef(null);
     //States
     const [{adminData, chatBoxActive, messages}, dispatch] = useAppState();
     const [numberOfMessages, setNumberOfMessages] = useState(0);
     const [reachedNow, setReachedNow] = useState(null);
 
+
+
+    
     //Effects
     useEffect(() => {
         if(chatBoxActive && adminData && adminData.id && adminData.token) {
@@ -51,16 +54,34 @@ export default function Messages({socket, typeScreen}) {
         }
     }, [reachedNow, socket, adminData, chatBoxActive])
 
-    useEffect(() => {
-        let num = messages.length;
-        setNumberOfMessages(num);
-    }, [messages]);
-
     useLayoutEffect(() => {
-        refForScrolling.current.scrollIntoView();
-    }, [numberOfMessages]);
-
+        
+        let num = messages.length;
+        if(!numberOfMessages) {
     
+            refForScrollingToThis.current.scrollIntoView();
+            setYouCanRefreshes(true);
+            setNumberOfMessages(num);
+
+        }else if (num > numberOfMessages) {
+            console.log(num, numberOfMessages)
+            if(num > numberOfMessages+10) {
+                setNumberOfMessages(num);
+                
+                setTimeout(() => {
+                    setStopNewRefreshes(false);
+                }, [1000])
+
+            } else {
+                refForScrollingToThis.current.scrollIntoView();
+                setNumberOfMessages(num);
+
+            }
+
+        }
+    }, [messages, numberOfMessages, setStopNewRefreshes, setYouCanRefreshes]);
+
+
     return (
         <div className={(typeScreen === "normal") ? "min-full-h-normal" : "min-full-h-small"}>
             {(messages.length === 0) ? <div className="nothing-found">No message found</div> : ''}
@@ -81,7 +102,7 @@ export default function Messages({socket, typeScreen}) {
                     </p>
                 </div>
             )}
-            <div ref={refForScrolling}></div>
+            <div ref={refForScrollingToThis}></div>
         </div>
     )
 }

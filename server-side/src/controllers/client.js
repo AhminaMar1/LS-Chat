@@ -3,11 +3,13 @@ const redisClient = redis.createClient();
 //connet with redis
 redisClient.on('connect', () => console.log('Redis client connect'));
 
-const User = require('../models/user')
+const User = require('../models/user');
+const Chat = require('../models/chat');
 
 
-const {userAuth, adminAuth} = require('../functions/authForSocket')
-
+const {userAuth, adminAuth} = require('../functions/authForSocket');
+const {getChatDoc} = require('../functions/getChatDoc');
+const {authUserOrAdmin} = require('../functions/authUserOrAdmin');
 
 //We get this from the redis
 exports.lastChatDoc = (req, res) => {
@@ -41,32 +43,44 @@ exports.lastChatDoc = (req, res) => {
         })
     }
 
-    let id = req.query.id,
-        token= req.query.token,
-        admin = req.query.admin,
-        userId = req.query.id_user;
+    authUserOrAdmin(req, {userAuth, adminAuth, redisClient}, (userId) => {
+        
+        //The callback function
+        getLRange(redisClient, userId, res, 'admin');
 
-    if(id && token) {
-        let checkData = {id, token}
-        userAuth({checkData, redisClient}, () => {
-            getLRange(redisClient, id, res, 'user');
-        });
-    }else if (admin && userId) {
-
-        let checkDataAdmin = {
-            id: req.query.admin_id,
-            token: req.query.admin_token
-        }
-
-        adminAuth({checkData: checkDataAdmin, redisClient}, () => {
-            getLRange(redisClient, userId, res, 'admin');
-
-        })
-    }
+    });
 }
+
+
 
 exports.prevChatDoc = (req, res) => {
     
+    //Chech the user
+    authUserOrAdmin(req, {userAuth, adminAuth, redisClient}, (userId) => {
+        
+        //The callback function
+        (async () => {
+            let docId = req.query.doc_id; 
+            docId = (!docId || docId === 'null') ? null : docId;
+    
+            let dataMessage = await getChatDoc(docId, userId, User, Chat);
+    
+            if(dataMessage) {
+
+                let dataSend = {
+                    doc_id_turn: dataMessage.prev_documet_id,
+                    messages: dataMessage.messages
+                }
+                res.status(200).json(dataSend);
+            } else {
+                res.status(200).json(false);
+            }
+
+        })()
+
+    });
+
+
 }
 
 const clientFunctions = require('../functions/saveInMongoForClient');

@@ -8,9 +8,7 @@ const clientController = require('../controllers/client');
 router.get('/lastchatdoc' , clientController.lastChatDoc)
 
 // Get the prev doc-mssgs
-router.get('/prevchatdoc' , (req , res)=>{
-
-})
+router.get('/prevchatdoc' , clientController.prevChatDoc)
 
 
 // start session. Create and retuen the token

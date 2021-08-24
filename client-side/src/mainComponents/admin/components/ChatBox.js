@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useLayoutEffect, useRef} from 'react';
+import React, {useState, useEffect, useLayoutEffect, useCallback, useRef} from 'react';
 import { useAppState } from '../reducers/AppState';
 import '../../../styles/admin.scss';
 import Messages from './Messages';
@@ -23,67 +23,77 @@ export default function ChatBox({socket, typeScreen}) {
     
     const [docIdTurn, setDocIdTurn] = useState(null);
 
-        //Get new messages when scrolling to top
+    //Get new messages when scrolling to top
 
-        const scrollHandle = (e) => {
-        
-            let doNewrefresh = e.target.scrollTop < 200;
+    const scrollTop = () => {
+        refListenerToScrolling.current.scrollTo(0, 2);
+    
+    }
+
+    const scrollHandle = useCallback((e) => {
+
+            let scroll = e.target.scrollTop;
+            let doNewrefresh = scroll < 100 && scroll > 1;
+            if (scroll < 2) {
+                scrollTop();
+            }
             setDoNewRefresh(doNewrefresh);
+
+    },[]);
+
+    useLayoutEffect(() => {
+        refListenerToScrolling.current.addEventListener('scroll', scrollHandle);
+
+        //To debugging an eslint err
+        let checkRefCurrent = null;
+        if (refListenerToScrolling.current) {
+            checkRefCurrent = refListenerToScrolling.current;
         }
-    
-        useLayoutEffect(() => {
-            refListenerToScrolling.current.addEventListener('scroll', scrollHandle);
-    
-            //To debugging an eslint err
-            let checkRefCurrent = null;
-            if (refListenerToScrolling.current) {
-                checkRefCurrent = refListenerToScrolling.current;
-            }
-    
-            return () => {
-                checkRefCurrent.removeEventListener('scroll', scrollHandle)
-            }
-    
-        }, [refListenerToScrolling]);
-    
-        const restartRefreshes = () => {
-            setDoNewRefresh(false);
-            setStopNewRefreshes(false);
+
+        return () => {
+            checkRefCurrent.removeEventListener('scroll', scrollHandle)
         }
-    
-        useEffect(() => {
-            if(youCanRefreshes && doNewRefresh && !stopNewRefreshes && !weGetAll) {
-                setStopNewRefreshes(true);
-                if (adminData && adminData.id && adminData.token) {
-                    console.log("Cccccc" + docIdTurn)
-                    axios.get(`${API_URL}/client/prevchatdoc?admin=yes&admin_id=${adminData.id}&admin_token=${adminData.token}&id_user=${chatBoxActive}&doc_id=${docIdTurn}`)
-                    .then((data) => {
-                        let messagesData = data.data;
 
-                        if(messagesData) {
+    }, [refListenerToScrolling, scrollHandle]);
 
-                            let turn = messagesData.doc_id_turn,
-                                messages = messagesData.messages || [];
+    const restartRefreshes = () => {
+        setDoNewRefresh(false);
+        setStopNewRefreshes(false);
+    }
 
-                            dispatch({type: 'addMessagesFromMongo', payload: messages})
-                            console.log(messages);
-                            if (turn) {
-                                setDocIdTurn(turn);
-                            } else {
-                                setWeGetAll(true)
-                            }
+    useEffect(() => {
+        if(youCanRefreshes && doNewRefresh && !stopNewRefreshes && !weGetAll) {
+            setStopNewRefreshes(true);
+            if (adminData && adminData.id && adminData.token) {
+                console.log("Cccccc" + docIdTurn)
+                axios.get(`${API_URL}/client/prevchatdoc?admin=yes&admin_id=${adminData.id}&admin_token=${adminData.token}&id_user=${chatBoxActive}&doc_id=${docIdTurn}`)
+                .then((data) => {
+                    let messagesData = data.data;
+
+                    if(messagesData) {
+
+                        let turn = messagesData.doc_id_turn,
+                            messages = messagesData.messages || [];
+
+                        dispatch({type: 'addMessagesFromMongo', payload: messages})
+                        console.log(messages);
+                        if (turn) {
+                            setDocIdTurn(turn);
+                        } else {
+                            setWeGetAll(true)
                         }
-                        
-                    }).catch((err) => console.log(err));
-    
-                } else {
-                    restartRefreshes(false);
-                }
+                    }
+                    
+                }).catch((err) => console.log(err));
+
+            } else {
+                restartRefreshes(false);
             }
-    
-    
-        }, [weGetAll, adminData, stopNewRefreshes, doNewRefresh, dispatch, chatBoxActive, docIdTurn, youCanRefreshes])
-    
+        }
+
+
+    }, [weGetAll, adminData, stopNewRefreshes, doNewRefresh, dispatch, chatBoxActive, docIdTurn, youCanRefreshes])
+
 
     return (
         <div ref={refListenerToScrolling} className="flex-chat-box" id="chat-display">

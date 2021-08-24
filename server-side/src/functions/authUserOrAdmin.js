@@ -8,7 +8,7 @@ exports.authUserOrAdmin = (req, {userAuth, adminAuth, redisClient}, callback) =>
     if(id && token) {
         let checkData = {id, token}
         userAuth({checkData, redisClient}, () => {
-            callback(id);
+            callback(id, 'client');
         });
     }else if (admin && userId) {
 
@@ -18,7 +18,7 @@ exports.authUserOrAdmin = (req, {userAuth, adminAuth, redisClient}, callback) =>
         }
 
         adminAuth({checkData: checkDataAdmin, redisClient}, () => {
-            callback(userId);
+            callback(userId, 'admin');
         })
     }
 

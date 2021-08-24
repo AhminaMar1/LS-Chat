@@ -56,7 +56,7 @@ exports.lastChatDoc = (req, res) => {
 exports.prevChatDoc = (req, res) => {
     
     //Chech the user
-    authUserOrAdmin(req, {userAuth, adminAuth, redisClient}, (userId) => {
+    authUserOrAdmin(req, {userAuth, adminAuth, redisClient}, (userId, typeUser) => {
         
         //The callback function
         (async () => {
@@ -65,7 +65,7 @@ exports.prevChatDoc = (req, res) => {
     
             let dataMessage = await getChatDoc(docId, userId, User, Chat);
     
-            if(dataMessage) {
+            if(dataMessage && (typeUser === 'admin' || (typeUser === 'client' && userId && dataMessage.user_id === userId))) {
 
                 let dataSend = {
                     doc_id_turn: dataMessage.prev_documet_id,

@@ -2,7 +2,7 @@ import React from 'react'
 import Messages from './Messages';
 import SendMessage from './SendMessage';
 
-export default function ChatClient({myId, nNotification, messages, sendMessage, setFocus, avatar, setToggleState}) {
+export default function ChatClient({myData, nNotification, messages, setMessages, sendMessage, setFocus, avatar, setToggleState}) {
 
     return (
         <div className="chat-client">
@@ -23,7 +23,7 @@ export default function ChatClient({myId, nNotification, messages, sendMessage, 
                 </div>
                 <div onClick={()=>setToggleState(false)} className="toggle-when-click"></div>
             </div>
-            <Messages myId={myId} messages={messages} />
+            <Messages myData={myData} messages={messages} setMessages={setMessages} />
             <SendMessage sendMessage={sendMessage} setFocus={setFocus}/>
 
         </div>

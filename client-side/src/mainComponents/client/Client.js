@@ -231,7 +231,7 @@ export default function Client() {
             {
             (myData.id === false) ? '' :
             (togleState) ?
-            <ChatClient myId={myData.id} nNotification={nNotification} messages={messages} sendMessage={sendMessage} setFocus={setFocus} avatar={avatar} setToggleState={setToggleState}/>
+            <ChatClient myData={myData} nNotification={nNotification} messages={messages} setMessages={setMessages} sendMessage={sendMessage} setFocus={setFocus} avatar={avatar} setToggleState={setToggleState}/>
             :
             <ChatClientCloseCase avatar={avatar} setToggleState={setToggleState}/>
             }

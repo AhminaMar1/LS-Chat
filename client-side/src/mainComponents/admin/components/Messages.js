@@ -14,13 +14,14 @@ export default function Messages({socket, typeScreen, setYouCanRefreshes, setSto
     const [{adminData, chatBoxActive, messages}, dispatch] = useAppState();
     const [numberOfMessages, setNumberOfMessages] = useState(0);
     const [reachedNow, setReachedNow] = useState(null);
-
+    const [newActive, setNewActive] = useState(false);
 
 
     
     //Effects
     useEffect(() => {
         if(chatBoxActive && adminData && adminData.id && adminData.token) {
+            
             axios.get(`${API_URL}/client/lastchatdoc?admin=yes&admin_id=${adminData.id}&admin_token=${adminData.token}&id_user=${chatBoxActive}`)
                 .then((data) => {
                     let ras = data.data.reached_and_seen;
@@ -32,8 +33,9 @@ export default function Messages({socket, typeScreen, setYouCanRefreshes, setSto
                             admin_reached: ras.admin_reached,
                         }, null, chatBoxActive);
 
+                    setNewActive(true);
                     dispatch({type: 'addMessages', payload: mssgArr});
-
+                    
                     let theLast = theLastForAdmin(mssgArr, 'admin');
                     if(theLast && theLast !== ras.admin_reached) {
                         setReachedNow(theLast);
@@ -57,29 +59,42 @@ export default function Messages({socket, typeScreen, setYouCanRefreshes, setSto
     useLayoutEffect(() => {
         
         let num = messages.length;
+        
+        //The first times
         if(!numberOfMessages) {
-    
-            refForScrollingToThis.current.scrollIntoView();
-            setYouCanRefreshes(true);
-            setNumberOfMessages(num);
-
-        }else if (num > numberOfMessages) {
-            if(num > numberOfMessages+10) {
-                setNumberOfMessages(num);
                 
-                setTimeout(() => {
-                    setStopNewRefreshes(false);
-                }, [1000])
+            refForScrollingToThis.current.scrollIntoView();
+            setNumberOfMessages(num);
+            setTimeout(() => {
+                setYouCanRefreshes(true);
+            }, [500]);
+            
+        } else if(num > numberOfMessages+10) { //If get prev mssgs
+            setNumberOfMessages(num);
+            
+            setTimeout(() => {
+                setStopNewRefreshes(false);
+            }, [1000]);
 
-            } else {
-                refForScrollingToThis.current.scrollIntoView();
-                setNumberOfMessages(num);
-
-            }
-
+        } else if(num > numberOfMessages) { //If new one message
+            refForScrollingToThis.current.scrollIntoView();
+            setNumberOfMessages(num);
         }
+
+        
+
     }, [messages, numberOfMessages, setStopNewRefreshes, setYouCanRefreshes]);
 
+    //To restat the state (To get prev mssgs) when we change the active convestation
+    useEffect(() => {
+
+        if(newActive){
+            setNumberOfMessages(0);
+            setNewActive(false);
+            setYouCanRefreshes(false);
+        }
+
+    }, [newActive, setYouCanRefreshes]);
 
     return (
         <div className={(typeScreen === "normal") ? "min-full-h-normal" : "min-full-h-small"}>

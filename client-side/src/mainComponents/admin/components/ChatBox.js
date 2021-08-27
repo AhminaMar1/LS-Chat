@@ -62,14 +62,12 @@ export default function ChatBox({socket, typeScreen}) {
     }
 
     useEffect(() => {
-        console.log(youCanRefreshes, doNewRefresh, !stopNewRefreshes, !weGetAll)
         if(youCanRefreshes && doNewRefresh && !stopNewRefreshes && !weGetAll) {
             setStopNewRefreshes(true);
             if (adminData && adminData.id && adminData.token) {
                 axios.get(`${API_URL}/client/prevchatdoc?admin=yes&admin_id=${adminData.id}&admin_token=${adminData.token}&id_user=${chatBoxActive}&doc_id=${docIdTurn}`)
                 .then((data) => {
                     let messagesData = data.data;
-                    console.log(messagesData)
                     if(messagesData) {
 
                         let turn = messagesData.doc_id_turn,

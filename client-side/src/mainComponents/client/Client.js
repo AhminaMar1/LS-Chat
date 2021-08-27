@@ -9,7 +9,7 @@ import axios from 'axios';
 import { v4 as uuid } from 'uuid';
 import {oneMessageFormat, messagesFormat} from '../../functions/messagesFormat';
 import {returnNotSeen, theLastForUser, updateMessagesRAS} from '../../functions/seenAndRechedFunctions'; 
-import SetTheTitleHelmet from '../setTheTitleHelmet';
+import SetTheTitle from '../SetTheTitle';
 
 const ENDPOINT = env.END_POINT;
 const API_URL = env.API_URL;
@@ -229,7 +229,7 @@ export default function Client() {
 
     return (
         <div className="chat-client-main-container">
-            <SetTheTitleHelmet nNotification={nNotification} />
+            <SetTheTitle nNotification={nNotification} />
             {
             (myData.id === false) ? '' :
             (togleState) ?

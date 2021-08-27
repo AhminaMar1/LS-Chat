@@ -1,4 +1,5 @@
 import React, {useState, useEffect, useLayoutEffect, useRef} from 'react'
+import SetTheTitle from '../../SetTheTitle';
 import Image from './Image';
 import { useAppState } from '../reducers/AppState';
 import axios from 'axios';
@@ -17,6 +18,7 @@ export default function ConversationBoxes({openConv}) {
     const [{conversations, chatBoxActive, adminData}, dispatch] = useAppState();
     const [doNewRefresh, setDoNewRefresh] = useState(false);
     const [stopNewRefreshes, setStopNewRefreshes] = useState(false);
+    const [nNotification, setNNotification] = useState(0);
 
     //Effect
     useEffect(() => {
@@ -106,8 +108,17 @@ export default function ConversationBoxes({openConv}) {
         dispatch({type:'newDataClient', payload: data}); //We need to change the url_pic if we got the pic of user from another place.
     }
 
+    useEffect(() => {
+
+        let existe = conversations.some(el => !el.seen && el.id === el.sender_id);
+        
+        setNNotification ((existe) ? -1 : 0);
+
+    }, [conversations]);
+
     return (
         <div className="flex-msgs-users-box" id="msg-user-display">
+            < SetTheTitle nNotification={nNotification}/>
             <div ref={convRef} className="u-m-list">
                 
                 <div className="search-box">

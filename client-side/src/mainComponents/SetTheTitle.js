@@ -13,14 +13,14 @@ export default function SetTheTitle({nNotification}) {
         
         if(nNotification === -1) {
             document.title = 'There are new messages || LS-Chat';
-            getFaviconEl.href = "https://github.com/AhminaMar1/LS-Chat/blob/main/client-side/public/logo2.png";
+            getFaviconEl.href = "https://github.com/AhminaMar1/LS-Chat/blob/main/client-side/public/LSC-notification.ico";
            
         }else if(nNotification){
             document.title = 'There are new '+nNotification+' messages || LS-Chat';
-            getFaviconEl.href = "https://github.com/AhminaMar1/LS-Chat/blob/main/client-side/public/logo2.png";
+            getFaviconEl.href = "https://github.com/AhminaMar1/LS-Chat/blob/main/client-side/public/LSC-notification";
         } else {
             document.title = 'Live support chat';
-            getFaviconEl.href = "https://github.com/AhminaMar1/LS-Chat/blob/main/client-side/public/logo.png";
+            getFaviconEl.href = "https://github.com/AhminaMar1/LS-Chat/blob/main/client-side/public/LSC.ico";
         }
     
     }, [nNotification, getFaviconEl]);

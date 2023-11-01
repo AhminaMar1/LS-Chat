@@ -39,7 +39,3 @@ LS-Chat it's acronym for: the live support chat
 ### The login service
 
 ![The login service](./LS-CHAT-3.png)
-
-### When we visit the admin from a phone
-
-![When we visit the admin from a phone](./LS-CHAT-4.png)

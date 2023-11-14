@@ -36,7 +36,7 @@ LS-Chat it's an acronym for the live support chat
 
 # Status of check of messages
 
-![check statuses](./status.png)
+![check statuses](./status.PNG)
 
 # photos
 

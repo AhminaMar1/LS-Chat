@@ -13,7 +13,7 @@ LS-Chat it's an acronym for the live support chat
 * Getting the latest messages from the RAM (faster X10).
 * Old historic messages saved into mongoDB (non-relational database)
 * Create (use) many of admins / support multiple of webmasters.
-* Now how to write before sending the messages.
+* Know who is writing before sending the messages.
 * Support: "The message reached the server", "has been reached to the user" and "has been read" statuses.
 
 # Explanations:

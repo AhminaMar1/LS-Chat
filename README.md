@@ -1,20 +1,20 @@
 # LS-Chat
 
-LS-Chat it's an acronym for the live support chat
+LS-Chat it's an acronym for the: *live support chat*
 
-
-* front end: using the **React**
-* back-end: using **nodeJs, Redis, Socket.io**
+# technologies:
+* front end: **React**
+* back-end: **nodeJs, Redis, Socket.io**
 * Databases: **MongoDB**, and **Redis** for caching.
 
 # Features
-* Live chat between admins and clients.
-* Caching of last 20 - 50 messages in Redis for every user.
-* Getting the latest messages from the RAM (faster X10).
-* Old historic messages saved into mongoDB (non-relational database)
+* Live chat app, between admins and clients.
+* Caching of the last 20 - 50 messages inside Redis for every user.
+* Getting the latest messages from the RAM/Redis (faster X10).
+* Old historic messages saved into mongoDB (non-relational database), those old messages are not loaded when the user/admin starts browsing the website; just when he scrolls up to get the historical/old messages.
 * Create (use) many of admins / support multiple of webmasters.
-* Know who is writing before sending the messages.
-* Support: "The message reached the server", "has been reached to the user" and "has been read" statuses.
+* Know if the user is writing, before sending the messages.
+* Support the messages statuses: if "The message saved into the server", "has been reached to the user", "has been seen by the user", or "nothing yet".
 
 # Explanations:
 * New messages are saved in a Redis "double-ended queue".
@@ -34,20 +34,21 @@ LS-Chat it's an acronym for the live support chat
 ![database diagram of LS-Chat](./database-diagram.png)
 
 
-# Status of check of messages
+# Screenshots:
+### The client service
 
-![check statuses](./status.PNG)
-
-# photos
+![The client service](./LS-CHAT-2.png)
 
 ### The admin service
 
 ![The admin service](./LS-CHAT-1.png)
 
-### The client service
-
-![The client service](./LS-CHAT-2.png)
 
 ### The login service
 
 ![The login service](./LS-CHAT-3.png)
+
+
+# Status of check of messages
+
+![check statuses](./status.PNG)

@@ -22,8 +22,9 @@ LS-Chat it's an acronym for the: *live support chat*
 * We moved a patch of 30 oldest messages into MongoDB, if the number of these messages in the RAM is bigger than 50.
 * Every new message DOC has an ID pointer to the previous message DOC.
 * When the user tries to get the next oldest messages (go to the top of the messages box), we know exactly the uid of the (next and previous) doc.
-  => So getting the oldest messages always has O(1) time compexity.
+  => So getting the oldest messages always has O(1) time complexity.
 
+![LS-CHAT explains](./LS-CHAT-explains.PNG)
 
 # API's
 

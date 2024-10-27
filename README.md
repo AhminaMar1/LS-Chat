@@ -26,6 +26,7 @@ LS-Chat it's an acronym for the: *live support chat*
 
 ![LS-CHAT explains](./LS-CHAT-explains.PNG)
 
+
 # API's
 
 [link of client API of LS-Chat](./api.http)
